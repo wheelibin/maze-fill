@@ -1,6 +1,7 @@
 extends SceneTree
 
 const MazeGenerator := preload("res://maze_generator.gd")
+const MazeSolver := preload("res://maze_solver.gd")
 
 const LEVELS_PER_TIER := 10
 const TIER_COUNT := 3
@@ -11,6 +12,7 @@ const EASY_FRACTION := 1.0 / 3.0
 const MEDIUM_FRACTION := 1.0 / 3.0 # hard fraction = remainder
 const GENERATION_SEED := 1
 const OUTPUT_PATH := "res://levels/levels.json"
+const MIN_MOVES_BUDGET_SECONDS := 15.0
 
 ## v1: slide-distance alone. To add a second signal later (wall density,
 ## direction-change count, etc.), change only this function's body.
@@ -45,6 +47,7 @@ func _initialize() -> void:
 			pool.append({
 				"walls": maze.walls,
 				"goal": maze.bfs.farthest,
+				"touched": maze.bfs.touched,
 				"score": _score_candidate(maze.bfs),
 			})
 		pool.sort_custom(func(a, b): return a.score < b.score)
@@ -98,6 +101,11 @@ func _initialize() -> void:
 
 			var level_number := t * LEVELS_PER_TIER + local_index + 1
 			var label := _label_for_score(chosen.score, t1, t2)
+			var solved := MazeSolver.min_moves_to_cover(chosen.walls, bounds, start, chosen.touched, MIN_MOVES_BUDGET_SECONDS)
+			if not solved.exact:
+				print("Level %d: min-moves solve exceeded %.0fs budget (%d states) — board too big for exact BFS" % [
+					level_number, MIN_MOVES_BUDGET_SECONDS, solved.states_explored,
+				])
 			levels.append({
 				"size": [size.x, size.y],
 				"start": [start.x, start.y],
@@ -105,8 +113,12 @@ func _initialize() -> void:
 				"goal": [chosen.goal.x, chosen.goal.y],
 				"difficulty_score": chosen.score,
 				"difficulty_label": label,
+				"min_moves": solved.moves,
+				"min_moves_exact": solved.exact,
 			})
-			print("  level %d -> score=%d label=%s" % [level_number, chosen.score, label])
+			print("  level %d -> score=%d label=%s min_moves=%d%s" % [
+				level_number, chosen.score, label, solved.moves, "" if solved.exact else " (not exact)",
+			])
 
 	assert(levels.size() == TIER_COUNT * LEVELS_PER_TIER)
 

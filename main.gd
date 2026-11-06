@@ -27,7 +27,7 @@ var _test_level := 1
 func _ready() -> void:
 	rng.randomize()
 	_build_board()
-	camera.center_on_bounds(Rect2i(Vector2i.ZERO, level_size))
+	camera.fit_board()
 	generate_procedural_maze()
 
 func _build_board() -> void:
@@ -102,7 +102,7 @@ func load_level(level_number: int) -> void:
 	var entry: Dictionary = levels[level_number - 1]
 	level_size = Vector2i(int(entry.size[0]), int(entry.size[1]))
 	_build_board()
-	camera.center_on_bounds(Rect2i(Vector2i.ZERO, level_size))
+	camera.fit_board()
 
 	var bounds := Rect2i(Vector2i.ZERO, level_size).grow(-1)
 	var walls := {}

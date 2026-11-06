@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var color: Color = Color.ORANGE
-@export var slide_speed: float = 3000.0
+@export var slide_speed: float = 4000.0
 
 @onready var floor_layer: TileMapLayer = $"../Floor"
 @onready var wall_layer: TileMapLayer = $"../Walls"
@@ -13,6 +13,8 @@ var moving := false
 const PAINT_SOURCE_ID := 1
 const PAINT_ATLAS_COORDS := Vector2i(2, 0)
 var last_painted_cell := Vector2i(-999, -999)
+var touch_start := Vector2.ZERO
+const MIN_SWIPE := 30.0
 
 func _ready() -> void:
 	position = floor_layer.map_to_local(grid_pos)
@@ -68,7 +70,7 @@ func slide(direction: Vector2i) -> void:
 	)
 
 	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_trans(Tween.TRANS_QUAD)
 	tween.set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "position", destination, duration)
 
@@ -117,3 +119,19 @@ func update_painting() -> void:
 		paint_cell(cell)
 
 	last_painted_cell = current_cell
+
+func _input(event: InputEvent) -> void:
+	
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			touch_start = event.position
+		else:
+			var swipe: Vector2 = event.position - touch_start
+
+			if swipe.length() < MIN_SWIPE or moving:
+				return
+
+			if absf(swipe.x) > absf(swipe.y):
+				slide(Vector2i.RIGHT if swipe.x > 0 else Vector2i.LEFT)
+			else:
+				slide(Vector2i.DOWN if swipe.y > 0 else Vector2i.UP)

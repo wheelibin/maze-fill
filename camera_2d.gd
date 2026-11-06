@@ -1,19 +1,39 @@
 extends Camera2D
 
+@export_range(0.0, 0.4) var margin: float = 0.05
+
 @onready var floor_layer: TileMapLayer = $"../Floor"
 
-func center_on_bounds(bounds: Rect2i) -> void:
-	var top_left := floor_layer.map_to_local(bounds.position)
-	var bottom_right := floor_layer.map_to_local(
+
+func _ready() -> void:
+	get_viewport().size_changed.connect(fit_board)
+	fit_board()
+
+
+func fit_board() -> void:
+	var bounds := floor_layer.get_used_rect()
+
+	if bounds.size == Vector2i.ZERO:
+		return
+
+	var tile_size := Vector2(floor_layer.tile_set.tile_size)
+
+	var board_size := Vector2(bounds.size) * tile_size
+
+	var first_cell := floor_layer.map_to_local(bounds.position)
+	var last_cell := floor_layer.map_to_local(
 		bounds.position + bounds.size - Vector2i.ONE
 	)
 
-	position = (top_left + bottom_right) / 2.0
+	# Camera and Floor are siblings under Board.
+	position = floor_layer.position + (first_cell + last_cell) / 2.0
 
-	var tile_size := Vector2(floor_layer.tile_set.tile_size)
-	var board_px := bottom_right - top_left + tile_size
 	var viewport_size := get_viewport_rect().size
-	# Only zoom out to fit; never zoom in past native tile size.
-	zoom = Vector2.ONE * minf(1.0, minf(
-		viewport_size.x / board_px.x, viewport_size.y / board_px.y
-	))
+	var available := viewport_size * (1.0 - margin * 2.0)
+
+	var factor := minf(
+		available.x / board_size.x,
+		available.y / board_size.y
+	)
+
+	zoom = Vector2.ONE * factor
