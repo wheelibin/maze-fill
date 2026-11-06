@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://ucb86dw1vrjx"]
+
+[ext_resource type="TileSet" uid="uid://c4g4t7n2awk27" path="res://maze_tileset.tres" id="1_e2o6t"]
+[ext_resource type="Script" uid="uid://x15y40nodsmi" path="res://player.gd" id="2_feb5d"]
+[ext_resource type="Script" uid="uid://dxcau7otp81h3" path="res://camera_2d.gd" id="3_feb5d"]
+[ext_resource type="Script" uid="uid://ubmdcft4hb8v" path="res://main.gd" id="4_main"]
+
+[node name="Main" type="Node2D" unique_id=919874870]
+script = ExtResource("4_main")
+level_size = Vector2i(9, 5)
+
+[node name="Board" type="Node2D" parent="." unique_id=1087012498]
+
+[node name="Floor" type="TileMapLayer" parent="Board" unique_id=2061703873]
+tile_set = ExtResource("1_e2o6t")
+
+[node name="Painted" type="TileMapLayer" parent="Board" unique_id=325526839]
+tile_set = ExtResource("1_e2o6t")
+
+[node name="Walls" type="TileMapLayer" parent="Board" unique_id=1888385220]
+tile_set = ExtResource("1_e2o6t")
+
+[node name="Player" type="Node2D" parent="Board" unique_id=1485644087]
+script = ExtResource("2_feb5d")
+
+[node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
+script = ExtResource("3_feb5d")
