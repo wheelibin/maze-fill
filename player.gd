@@ -36,25 +36,24 @@ const SCALE_SEMITONES := [0, 2, 4, 7, 9, 12, 14, 16]
 
 var _scale_step := 0
 var _scale_direction := 1
-var _note_buffers: Array[PackedVector2Array] = []
+var _note_streams: Array[AudioStreamWAV] = []
 
 func _ready() -> void:
 	position = floor_layer.map_to_local(grid_pos)
 	paint_cell(grid_pos)
 	last_painted_cell = grid_pos
 
-	var generator := AudioStreamGenerator.new()
-	generator.mix_rate = NOTE_MIX_RATE
-	generator.buffer_length = 0.3
-	wall_hit_sound.stream = generator
-
-	# Precomputed once: synthesizing ~5k samples per hit was cheap on
-	# desktop but slow enough on mobile WASM to back up the main thread
-	# after repeated hits, growing audibly more delayed over time.
-	_note_buffers.resize(SCALE_SEMITONES.size())
+	# Precomputed once into finite AudioStreamWAVs, played via plain
+	# .play(). Previously used AudioStreamGenerator's manual ring buffer,
+	# but that assumes continuous real-time consumption — on mobile,
+	# backgrounding the tab suspends the Web Audio context, and the
+	# generator's frame bookkeeping doesn't recover cleanly on resume,
+	# leaving a permanent growing delay for the rest of the session. A
+	# finite, fully-managed stream has no such state to desync.
+	_note_streams.resize(SCALE_SEMITONES.size())
 	for i in SCALE_SEMITONES.size():
 		var freq := ROOT_FREQ * pow(2.0, SCALE_SEMITONES[i] / 12.0)
-		_note_buffers[i] = _build_note_buffer(freq)
+		_note_streams[i] = _build_note_stream(freq)
 
 func _draw() -> void:
 	draw_rect(Rect2(-24, -24, 48, 48), color)
@@ -145,17 +144,16 @@ func squash(direction: Vector2i) -> void:
 ## Plays a precomputed blip, picking a note from SCALE_SEMITONES each hit
 ## so it always sounds musical without ever repeating a predictable pattern.
 func play_wall_hit_note() -> void:
+	wall_hit_sound.stream = _note_streams[_sequential_scale_step()]
 	wall_hit_sound.play()
-	var playback: AudioStreamGeneratorPlayback = wall_hit_sound.get_stream_playback()
-	playback.push_buffer(_note_buffers[_sequential_scale_step()])
 
 ## shortcut: plain sine only, no filtered-square option — swap the
 ## sin(TAU * freq * t) line for sign(sin(...)) through a one-pole lowpass
 ## if a buzzier tone is wanted later.
-func _build_note_buffer(freq: float) -> PackedVector2Array:
+func _build_note_stream(freq: float) -> AudioStreamWAV:
 	var sample_count := int(NOTE_MIX_RATE * NOTE_DURATION)
-	var buffer := PackedVector2Array()
-	buffer.resize(sample_count)
+	var data := PackedByteArray()
+	data.resize(sample_count * 2) # 16-bit mono
 	for i in sample_count:
 		var t := i / NOTE_MIX_RATE
 		var progress := float(i) / sample_count
@@ -165,8 +163,14 @@ func _build_note_buffer(freq: float) -> PackedVector2Array:
 		elif progress > 1.0 - NOTE_RELEASE:
 			envelope = (1.0 - progress) / NOTE_RELEASE
 		var sample := sin(TAU * freq * t) * envelope
-		buffer[i] = Vector2(sample, sample)
-	return buffer
+		data.encode_s16(i * 2, int(clampf(sample, -1.0, 1.0) * 32767.0))
+
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = int(NOTE_MIX_RATE)
+	stream.stereo = false
+	stream.data = data
+	return stream
 
 func _random_scale_step() -> int:
 	return randi() % SCALE_SEMITONES.size()
