@@ -7,7 +7,7 @@
 
 [node name="Main" type="Node2D" unique_id=919874870]
 script = ExtResource("4_main")
-level_size = Vector2i(9, 5)
+level_size = Vector2i(22, 14)
 
 [node name="Board" type="Node2D" parent="." unique_id=1087012498]
 

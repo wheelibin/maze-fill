@@ -10,7 +10,7 @@ extends Node2D
 
 var grid_pos := Vector2i(2, 2)
 var moving := false
-const PAINT_SOURCE_ID := 1
+const PAINT_SOURCE_ID := 2
 const PAINT_ATLAS_COORDS := Vector2i(2, 0)
 var last_painted_cell := Vector2i(-999, -999)
 var touch_start := Vector2.ZERO

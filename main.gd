@@ -2,10 +2,10 @@ extends Node2D
 
 const MazeGenerator := preload("res://maze_generator.gd")
 
-const FLOOR_SOURCE_ID := 1
-const FLOOR_ATLAS_COORDS := Vector2i(0, 0)
-const WALL_SOURCE_ID := 1
-const WALL_ATLAS_COORDS := Vector2i(1, 0)
+const FLOOR_SOURCE_ID := 2
+const FLOOR_ATLAS_COORDS := Vector2i(1, 0)
+const WALL_SOURCE_ID := 2
+const WALL_ATLAS_COORDS := Vector2i(0, 0)
 
 ## Full board size including the 1-tile border ring; the maze itself fills
 ## bounds.grow(-1). Change this to try e.g. Vector2i(16, 16) or Vector2i(32, 32).
@@ -74,8 +74,8 @@ func generate_procedural_maze(target_difficulty: String = "") -> void:
 	player.last_painted_cell = start
 	player.paint_cell(start)
 
-	print("Procedural maze: goal %s, %d slides to reach it (%s)" % [
-		goal, difficulty, MazeGenerator.difficulty_label(difficulty)
+	print("Procedural maze: goal %s, %d slides to reach it (%s) [seed %d]" % [
+		goal, difficulty, MazeGenerator.difficulty_label(difficulty), rng.seed
 	])
 
 func _load_levels_data() -> Array:
