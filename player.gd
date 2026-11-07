@@ -5,8 +5,8 @@ extends Node2D
 
 @onready var floor_layer: TileMapLayer = $"../Floor"
 @onready var wall_layer: TileMapLayer = $"../Walls"
-@onready var camera: Camera2D = $"../Camera2D"
 @onready var painted_layer: TileMapLayer = $"../Painted"
+@onready var wall_hit_sound: AudioStreamPlayer = $WallHitSound
 
 var grid_pos := Vector2i(2, 2)
 var moving := false
@@ -16,10 +16,31 @@ var last_painted_cell := Vector2i(-999, -999)
 var touch_start := Vector2.ZERO
 const MIN_SWIPE := 30.0
 
+const SQUASH_STRENGTH := 0.25
+const SQUASH_SETTLE_DURATION := 0.18
+var _squash_tween: Tween
+
+const NOTE_MIX_RATE := 44100.0
+const NOTE_DURATION := 0.12
+const NOTE_ATTACK := 0.05 # fraction of NOTE_DURATION
+const NOTE_RELEASE := 0.4 # fraction of NOTE_DURATION
+const ROOT_FREQ := 220.0
+## Pentatonic semitone offsets — no dissonant steps, so any order sounds musical.
+const SCALE_SEMITONES := [0, 2, 4, 7, 9, 12, 14, 16]
+#const SCALE_SEMITONES := [0]
+
+var _scale_step := 0
+var _scale_direction := 1
+
 func _ready() -> void:
 	position = floor_layer.map_to_local(grid_pos)
 	paint_cell(grid_pos)
 	last_painted_cell = grid_pos
+
+	var generator := AudioStreamGenerator.new()
+	generator.mix_rate = NOTE_MIX_RATE
+	generator.buffer_length = 0.3
+	wall_hit_sound.stream = generator
 
 func _draw() -> void:
 	draw_rect(Rect2(-24, -24, 48, 48), color)
@@ -58,6 +79,7 @@ func slide(direction: Vector2i) -> void:
 		target = next
 
 	if target == grid_pos:
+		squash(direction)
 		return
 
 	grid_pos = target
@@ -77,17 +99,67 @@ func slide(direction: Vector2i) -> void:
 	tween.finished.connect(func():
 		update_painting()
 		moving = false
-		#shake_camera()
+		squash(direction)
+		play_wall_hit_note()
 	)
 
-func shake_camera() -> void:
-	var tween := create_tween()
+## Rubber-ball squash: compress along the travel axis, bulge perpendicular,
+## then spring back. Used both when blocked outright (no movement) and when
+## landing at the end of a slide (every slide ends against a wall/edge).
+func squash(direction: Vector2i) -> void:
+	if _squash_tween:
+		_squash_tween.kill()
 
-	tween.tween_property(camera, "offset", Vector2(5, -3), 0.025)
-	tween.tween_property(camera, "offset", Vector2(-4, 2), 0.025)
-	tween.tween_property(camera, "offset", Vector2(2, -1), 0.025)
-	tween.tween_property(camera, "offset", Vector2.ZERO, 0.04)
-	
+	var squashed: Vector2
+	if direction.x != 0:
+		squashed = Vector2(1.0 - SQUASH_STRENGTH, 1.0 + SQUASH_STRENGTH)
+	else:
+		squashed = Vector2(1.0 + SQUASH_STRENGTH, 1.0 - SQUASH_STRENGTH)
+
+	_squash_tween = create_tween()
+	_squash_tween.tween_property(self, "scale", squashed, 0.05) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_squash_tween.tween_property(self, "scale", Vector2.ONE, SQUASH_SETTLE_DURATION) \
+		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+
+## Synthesizes a short sine-wave blip, picking a random note from
+## SCALE_SEMITONES each hit so it always sounds musical without ever
+## repeating a predictable pattern.
+## shortcut: plain sine only, no filtered-square option — swap the
+## sin(TAU * freq * t) line for sign(sin(...)) through a one-pole lowpass
+## if a buzzier tone is wanted later.
+func play_wall_hit_note() -> void:
+	var freq := ROOT_FREQ * pow(2.0, SCALE_SEMITONES[_sequential_scale_step()] / 12.0)
+
+	wall_hit_sound.play()
+	var playback: AudioStreamGeneratorPlayback = wall_hit_sound.get_stream_playback()
+	var sample_count := int(NOTE_MIX_RATE * NOTE_DURATION)
+	var buffer := PackedVector2Array()
+	buffer.resize(sample_count)
+	for i in sample_count:
+		var t := i / NOTE_MIX_RATE
+		var progress := float(i) / sample_count
+		var envelope := 1.0
+		if progress < NOTE_ATTACK:
+			envelope = progress / NOTE_ATTACK
+		elif progress > 1.0 - NOTE_RELEASE:
+			envelope = (1.0 - progress) / NOTE_RELEASE
+		var sample := sin(TAU * freq * t) * envelope
+		buffer[i] = Vector2(sample, sample)
+	playback.push_buffer(buffer)
+
+func _random_scale_step() -> int:
+	return randi() % SCALE_SEMITONES.size()
+
+# Alternative: walk up and down the scale, bouncing direction at either
+# end, instead of picking randomly. Swap the call above to use this.
+func _sequential_scale_step() -> int:
+	var step := _scale_step
+	_scale_step += _scale_direction
+	if _scale_step >= SCALE_SEMITONES.size() - 1 or _scale_step <= 0:
+		_scale_direction *= -1
+	return step
+
 func paint_cell(cell: Vector2i) -> void:
 	if floor_layer.get_cell_source_id(cell) == -1:
 		return
