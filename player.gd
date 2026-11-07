@@ -36,6 +36,7 @@ const SCALE_SEMITONES := [0, 2, 4, 7, 9, 12, 14, 16]
 
 var _scale_step := 0
 var _scale_direction := 1
+var _note_buffers: Array[PackedVector2Array] = []
 
 func _ready() -> void:
 	position = floor_layer.map_to_local(grid_pos)
@@ -46,6 +47,14 @@ func _ready() -> void:
 	generator.mix_rate = NOTE_MIX_RATE
 	generator.buffer_length = 0.3
 	wall_hit_sound.stream = generator
+
+	# Precomputed once: synthesizing ~5k samples per hit was cheap on
+	# desktop but slow enough on mobile WASM to back up the main thread
+	# after repeated hits, growing audibly more delayed over time.
+	_note_buffers.resize(SCALE_SEMITONES.size())
+	for i in SCALE_SEMITONES.size():
+		var freq := ROOT_FREQ * pow(2.0, SCALE_SEMITONES[i] / 12.0)
+		_note_buffers[i] = _build_note_buffer(freq)
 
 func _draw() -> void:
 	draw_rect(Rect2(-24, -24, 48, 48), color)
@@ -133,17 +142,17 @@ func squash(direction: Vector2i) -> void:
 	_squash_tween.tween_property(self, "scale", Vector2.ONE, SQUASH_SETTLE_DURATION) \
 		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
-## Synthesizes a short sine-wave blip, picking a random note from
-## SCALE_SEMITONES each hit so it always sounds musical without ever
-## repeating a predictable pattern.
+## Plays a precomputed blip, picking a note from SCALE_SEMITONES each hit
+## so it always sounds musical without ever repeating a predictable pattern.
+func play_wall_hit_note() -> void:
+	wall_hit_sound.play()
+	var playback: AudioStreamGeneratorPlayback = wall_hit_sound.get_stream_playback()
+	playback.push_buffer(_note_buffers[_sequential_scale_step()])
+
 ## shortcut: plain sine only, no filtered-square option — swap the
 ## sin(TAU * freq * t) line for sign(sin(...)) through a one-pole lowpass
 ## if a buzzier tone is wanted later.
-func play_wall_hit_note() -> void:
-	var freq := ROOT_FREQ * pow(2.0, SCALE_SEMITONES[_sequential_scale_step()] / 12.0)
-
-	wall_hit_sound.play()
-	var playback: AudioStreamGeneratorPlayback = wall_hit_sound.get_stream_playback()
+func _build_note_buffer(freq: float) -> PackedVector2Array:
 	var sample_count := int(NOTE_MIX_RATE * NOTE_DURATION)
 	var buffer := PackedVector2Array()
 	buffer.resize(sample_count)
@@ -157,7 +166,7 @@ func play_wall_hit_note() -> void:
 			envelope = (1.0 - progress) / NOTE_RELEASE
 		var sample := sin(TAU * freq * t) * envelope
 		buffer[i] = Vector2(sample, sample)
-	playback.push_buffer(buffer)
+	return buffer
 
 func _random_scale_step() -> int:
 	return randi() % SCALE_SEMITONES.size()
