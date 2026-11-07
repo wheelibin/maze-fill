@@ -1,3 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Generator run output, not source
+generator/*.txt
+generator/*.log

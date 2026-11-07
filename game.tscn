@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://dxcau7otp81h3" path="res://camera_2d.gd" id="3_feb5d"]
 [ext_resource type="Script" uid="uid://ubmdcft4hb8v" path="res://main.gd" id="4_main"]
 [ext_resource type="Shader" uid="uid://dvle2b0hfk4f1" path="res://wall_shadow_blur.gdshader" id="5_shadow_blur"]
-[ext_resource type="Script" path="res://win_popup.gd" id="7_winpopup"]
+[ext_resource type="Script" uid="uid://cgwy7fcvf5kca" path="res://win_popup.gd" id="7_winpopup"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_blur"]
 shader = ExtResource("5_shadow_blur")
@@ -24,7 +24,7 @@ fill_to = Vector2(1, 0.5)
 
 [node name="Main" type="Node2D" unique_id=919874870]
 script = ExtResource("4_main")
-level_size = Vector2i(22, 14)
+level_size = Vector2i(14, 6)
 
 [node name="Board" type="Node2D" parent="." unique_id=1087012498]
 
@@ -51,14 +51,13 @@ script = ExtResource("2_feb5d")
 [node name="WallHitSound" type="AudioStreamPlayer" parent="Board/Player" unique_id=323946077]
 volume_db = -12.0
 
-[node name="TrailParticles" type="CPUParticles2D" parent="Board/Player"]
+[node name="TrailParticles" type="CPUParticles2D" parent="Board/Player" unique_id=624584521]
 emitting = false
-texture = SubResource("GradientTexture2D_trail")
 amount = 10
+texture = SubResource("GradientTexture2D_trail")
 lifetime = 0.15
-local_coords = false
-gravity = Vector2(0, 0)
 spread = 180.0
+gravity = Vector2(0, 0)
 initial_velocity_min = 5.0
 initial_velocity_max = 20.0
 scale_amount_min = 0.4
@@ -68,9 +67,11 @@ color = Color(1, 0.65, 0, 0.8)
 [node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
 script = ExtResource("3_feb5d")
 
-[node name="WinPopup" type="CanvasLayer" parent="."]
+[node name="WinPopup" type="CanvasLayer" parent="." unique_id=341938539]
 
-[node name="Panel" type="Panel" parent="WinPopup"]
+[node name="Panel" type="Panel" parent="WinPopup" unique_id=755129978]
+visible = false
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -81,12 +82,10 @@ offset_right = 160.0
 offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
-visible = false
 script = ExtResource("7_winpopup")
 
-[node name="MarginContainer" type="MarginContainer" parent="WinPopup/Panel"]
-layout_mode = 2
-anchors_preset = 15
+[node name="MarginContainer" type="MarginContainer" parent="WinPopup/Panel" unique_id=1659977782]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme_override_constants/margin_left = 24
@@ -94,21 +93,20 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="WinPopup/Panel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="WinPopup/Panel/MarginContainer" unique_id=1951940785]
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=15859624]
 layout_mode = 2
 text = "Level Complete!"
 horizontal_alignment = 1
 
-[node name="MovesLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+[node name="MovesLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=191273140]
 layout_mode = 2
-text = ""
 horizontal_alignment = 1
 
-[node name="NextButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+[node name="NextButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=753218675]
 layout_mode = 2
 text = "Next Level"
