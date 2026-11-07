@@ -1,6 +1,9 @@
 extends Camera2D
 
 @export_range(0.0, 0.4) var margin: float = 0.05
+## Desktop only (no touchscreen) — never zoom in past this, so the board
+## doesn't balloon on huge monitors. Mobile always fills to the viewport.
+@export var max_zoom_desktop: float = 3.0
 
 @onready var floor_layer: TileMapLayer = $"../Floor"
 
@@ -35,5 +38,7 @@ func fit_board() -> void:
 		available.x / board_size.x,
 		available.y / board_size.y
 	)
+	if not DisplayServer.is_touchscreen_available():
+		factor = minf(factor, max_zoom_desktop)
 
 	zoom = Vector2.ONE * factor
