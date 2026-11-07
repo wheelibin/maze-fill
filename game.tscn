@@ -4,6 +4,11 @@
 [ext_resource type="Script" uid="uid://x15y40nodsmi" path="res://player.gd" id="2_feb5d"]
 [ext_resource type="Script" uid="uid://dxcau7otp81h3" path="res://camera_2d.gd" id="3_feb5d"]
 [ext_resource type="Script" uid="uid://ubmdcft4hb8v" path="res://main.gd" id="4_main"]
+[ext_resource type="Shader" path="res://wall_shadow_blur.gdshader" id="5_shadow_blur"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_blur"]
+shader = ExtResource("5_shadow_blur")
+shader_parameter/blur_radius = 14.0
 
 [node name="Main" type="Node2D" unique_id=919874870]
 script = ExtResource("4_main")
@@ -16,6 +21,14 @@ tile_set = ExtResource("1_e2o6t")
 
 [node name="Painted" type="TileMapLayer" parent="Board" unique_id=325526839]
 tile_set = ExtResource("1_e2o6t")
+
+[node name="WallShadowGroup" type="CanvasGroup" parent="Board"]
+material = SubResource("ShaderMaterial_shadow_blur")
+
+[node name="WallShadow" type="TileMapLayer" parent="Board/WallShadowGroup"]
+tile_set = ExtResource("1_e2o6t")
+position = Vector2(6, 6)
+modulate = Color(0, 0, 0, 0.35)
 
 [node name="Walls" type="TileMapLayer" parent="Board" unique_id=1888385220]
 tile_set = ExtResource("1_e2o6t")

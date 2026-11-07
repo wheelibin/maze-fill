@@ -13,6 +13,7 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 
 @onready var floor_layer: TileMapLayer = $Board/Floor
 @onready var wall_layer: TileMapLayer = $Board/Walls
+@onready var wall_shadow_layer: TileMapLayer = $Board/WallShadowGroup/WallShadow
 @onready var painted_layer: TileMapLayer = $Board/Painted
 @onready var player = $Board/Player
 @onready var camera: Camera2D = $Board/Camera2D
@@ -33,12 +34,14 @@ func _ready() -> void:
 func _build_board() -> void:
 	floor_layer.clear()
 	wall_layer.clear()
+	wall_shadow_layer.clear()
 	for y in range(level_size.y):
 		for x in range(level_size.x):
 			var tile := Vector2i(x, y)
 			floor_layer.set_cell(tile, FLOOR_SOURCE_ID, FLOOR_ATLAS_COORDS)
 			if x == 0 or y == 0 or x == level_size.x - 1 or y == level_size.y - 1:
 				wall_layer.set_cell(tile, WALL_SOURCE_ID, WALL_ATLAS_COORDS)
+				wall_shadow_layer.set_cell(tile, WALL_SOURCE_ID, WALL_ATLAS_COORDS)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
@@ -127,5 +130,7 @@ func _paint_walls(bounds: Rect2i, walls: Dictionary) -> void:
 			var tile := Vector2i(x, y)
 			if walls.get(tile, false):
 				wall_layer.set_cell(tile, WALL_SOURCE_ID, WALL_ATLAS_COORDS)
+				wall_shadow_layer.set_cell(tile, WALL_SOURCE_ID, WALL_ATLAS_COORDS)
 			else:
 				wall_layer.erase_cell(tile)
+				wall_shadow_layer.erase_cell(tile)
