@@ -11,6 +11,17 @@
 shader = ExtResource("5_shadow_blur")
 shader_parameter/blur_radius = 14.0
 
+[sub_resource type="Gradient" id="Gradient_trail"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_trail"]
+gradient = SubResource("Gradient_trail")
+width = 16
+height = 16
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
 [node name="Main" type="Node2D" unique_id=919874870]
 script = ExtResource("4_main")
 level_size = Vector2i(22, 14)
@@ -39,6 +50,20 @@ script = ExtResource("2_feb5d")
 
 [node name="WallHitSound" type="AudioStreamPlayer" parent="Board/Player" unique_id=323946077]
 volume_db = -12.0
+
+[node name="TrailParticles" type="CPUParticles2D" parent="Board/Player"]
+emitting = false
+texture = SubResource("GradientTexture2D_trail")
+amount = 10
+lifetime = 0.15
+local_coords = false
+gravity = Vector2(0, 0)
+spread = 180.0
+initial_velocity_min = 5.0
+initial_velocity_max = 20.0
+scale_amount_min = 0.4
+scale_amount_max = 0.7
+color = Color(1, 0.65, 0, 0.8)
 
 [node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
 script = ExtResource("3_feb5d")

@@ -7,6 +7,7 @@ extends Node2D
 @onready var wall_layer: TileMapLayer = $"../Walls"
 @onready var painted_layer: TileMapLayer = $"../Painted"
 @onready var wall_hit_sound: AudioStreamPlayer = $WallHitSound
+@onready var trail_particles: CPUParticles2D = $TrailParticles
 @onready var main = $"../.."
 
 var grid_pos := Vector2i(2, 2)
@@ -88,6 +89,7 @@ func slide(direction: Vector2i) -> void:
 
 	grid_pos = target
 	moving = true
+	trail_particles.emitting = true
 
 	var destination := floor_layer.map_to_local(grid_pos)
 	var duration := maxf(
@@ -103,6 +105,7 @@ func slide(direction: Vector2i) -> void:
 	tween.finished.connect(func():
 		update_painting()
 		moving = false
+		trail_particles.emitting = false
 		squash(direction)
 		play_wall_hit_note()
 		move_count += 1
