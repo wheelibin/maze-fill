@@ -17,6 +17,7 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var painted_layer: TileMapLayer = $Board/Painted
 @onready var player = $Board/Player
 @onready var camera: Camera2D = $Board/Camera2D
+@onready var win_popup = $WinPopup/Panel
 
 const LEVELS_PATH := "res://levels/levels.json"
 
@@ -24,12 +25,14 @@ var rng := RandomNumberGenerator.new()
 var _levels_data: Array = []
 var _levels_loaded := false
 var _test_level := 1
+var current_level := 1
+var _current_level_entry: Dictionary = {}
 
 func _ready() -> void:
 	rng.randomize()
 	_build_board()
 	camera.fit_board()
-	generate_procedural_maze()
+	load_level(current_level)
 
 func _build_board() -> void:
 	floor_layer.clear()
@@ -69,13 +72,8 @@ func generate_procedural_maze(target_difficulty: String = "") -> void:
 	var goal: Vector2i = bfs.farthest
 	var difficulty: int = bfs.distances[goal]
 
-	_paint_walls(bounds, maze.walls)
-	painted_layer.clear()
-
-	player.grid_pos = start
-	player.position = floor_layer.map_to_local(start)
-	player.last_painted_cell = start
-	player.paint_cell(start)
+	_current_level_entry = {} # no stored par for a live procedural maze
+	_start_level(bounds, maze.walls, start)
 
 	print("Procedural maze: goal %s, %d slides to reach it (%s) [seed %d]" % [
 		goal, difficulty, MazeGenerator.difficulty_label(difficulty), rng.seed
@@ -111,18 +109,43 @@ func load_level(level_number: int) -> void:
 	var walls := {}
 	for pair in entry.walls:
 		walls[Vector2i(int(pair[0]), int(pair[1]))] = true
-	_paint_walls(bounds, walls)
-	painted_layer.clear()
-
 	var start := Vector2i(int(entry.start[0]), int(entry.start[1]))
-	player.grid_pos = start
-	player.position = floor_layer.map_to_local(start)
-	player.last_painted_cell = start
-	player.paint_cell(start)
+
+	current_level = level_number
+	_current_level_entry = entry
+	_start_level(bounds, walls, start)
 
 	print("Loaded level %d: size %s, score %d (%s)" % [
 		level_number, level_size, entry.difficulty_score, entry.difficulty_label
 	])
+
+func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
+	_paint_walls(bounds, walls)
+	painted_layer.clear()
+
+	player.grid_pos = start
+	player.position = floor_layer.map_to_local(start)
+	player.last_painted_cell = start
+	player.move_count = 0
+	player.level_complete = false
+	win_popup.hide_popup()
+
+	var touched: Dictionary = MazeGenerator.slide_bfs(walls, bounds, start).touched
+	player.total_paintable = touched.size()
+
+	player.paint_cell(start)
+
+func show_win_popup(moves: int) -> void:
+	var par := int(_current_level_entry.get("min_moves", -1))
+	win_popup.show_result(moves, par)
+
+func go_to_next_level() -> void:
+	var levels := _load_levels_data()
+	var next := current_level + 1
+	if next > levels.size():
+		generate_procedural_maze() # out of stored levels — keep playing at the same (last tier's) grid size
+		return
+	load_level(next)
 
 func _paint_walls(bounds: Rect2i, walls: Dictionary) -> void:
 	for y in range(bounds.position.y, bounds.end.y):

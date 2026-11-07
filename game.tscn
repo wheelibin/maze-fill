@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://dxcau7otp81h3" path="res://camera_2d.gd" id="3_feb5d"]
 [ext_resource type="Script" uid="uid://ubmdcft4hb8v" path="res://main.gd" id="4_main"]
 [ext_resource type="Shader" uid="uid://dvle2b0hfk4f1" path="res://wall_shadow_blur.gdshader" id="5_shadow_blur"]
+[ext_resource type="Script" path="res://win_popup.gd" id="7_winpopup"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_blur"]
 shader = ExtResource("5_shadow_blur")
@@ -41,3 +42,48 @@ volume_db = -12.0
 
 [node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
 script = ExtResource("3_feb5d")
+
+[node name="WinPopup" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="WinPopup"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -100.0
+offset_right = 160.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+script = ExtResource("7_winpopup")
+
+[node name="MarginContainer" type="MarginContainer" parent="WinPopup/Panel"]
+layout_mode = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WinPopup/Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Level Complete!"
+horizontal_alignment = 1
+
+[node name="MovesLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+
+[node name="NextButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Next Level"

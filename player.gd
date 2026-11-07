@@ -7,9 +7,13 @@ extends Node2D
 @onready var wall_layer: TileMapLayer = $"../Walls"
 @onready var painted_layer: TileMapLayer = $"../Painted"
 @onready var wall_hit_sound: AudioStreamPlayer = $WallHitSound
+@onready var main = $"../.."
 
 var grid_pos := Vector2i(2, 2)
 var moving := false
+var move_count := 0
+var total_paintable := 0
+var level_complete := false
 const PAINT_SOURCE_ID := 2
 const PAINT_ATLAS_COORDS := Vector2i(2, 0)
 var last_painted_cell := Vector2i(-999, -999)
@@ -50,7 +54,7 @@ func _process(_delta: float) -> void:
 		update_painting()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if moving:
+	if moving or level_complete:
 		return
 
 	if event.is_action_pressed("ui_right"):
@@ -101,6 +105,10 @@ func slide(direction: Vector2i) -> void:
 		moving = false
 		squash(direction)
 		play_wall_hit_note()
+		move_count += 1
+		if not level_complete and painted_layer.get_used_cells().size() >= total_paintable:
+			level_complete = true
+			main.show_win_popup(move_count)
 	)
 
 ## Rubber-ball squash: compress along the travel axis, bulge perpendicular,
@@ -151,8 +159,7 @@ func play_wall_hit_note() -> void:
 func _random_scale_step() -> int:
 	return randi() % SCALE_SEMITONES.size()
 
-# Alternative: walk up and down the scale, bouncing direction at either
-# end, instead of picking randomly. Swap the call above to use this.
+# walk up and down the scale, bouncing direction at either end
 func _sequential_scale_step() -> int:
 	var step := _scale_step
 	_scale_step += _scale_direction
@@ -200,7 +207,7 @@ func _input(event: InputEvent) -> void:
 		else:
 			var swipe: Vector2 = event.position - touch_start
 
-			if swipe.length() < MIN_SWIPE or moving:
+			if swipe.length() < MIN_SWIPE or moving or level_complete:
 				return
 
 			if absf(swipe.x) > absf(swipe.y):
