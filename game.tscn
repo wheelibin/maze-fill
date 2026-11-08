@@ -53,16 +53,16 @@ volume_db = -12.0
 
 [node name="TrailParticles" type="CPUParticles2D" parent="Board/Player" unique_id=624584521]
 emitting = false
-amount = 10
+amount = 18
 texture = SubResource("GradientTexture2D_trail")
-lifetime = 0.15
+lifetime = 0.25
 spread = 180.0
 gravity = Vector2(0, 0)
 initial_velocity_min = 5.0
 initial_velocity_max = 20.0
-scale_amount_min = 0.4
-scale_amount_max = 0.7
-color = Color(1, 0.65, 0, 0.8)
+scale_amount_min = 0.8
+scale_amount_max = 1.4
+color = Color(1, 0.7, 0.1, 1)
 
 [node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
 script = ExtResource("3_feb5d")
