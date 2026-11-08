@@ -18,12 +18,10 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var player = $Board/Player
 @onready var camera: Camera2D = $Board/Camera2D
 @onready var win_popup = $WinPopup/Panel
-
-const LEVELS_PATH := "res://levels/levels.json"
+@onready var hud_moves_label: Label = $HUD/MarginContainer/HBoxContainer/MovesLabel
+@onready var hud_par_label: Label = $HUD/MarginContainer/HBoxContainer/ParLabel
 
 var rng := RandomNumberGenerator.new()
-var _levels_data: Array = []
-var _levels_loaded := false
 var _test_level := 1
 var current_level := 1
 var _current_level_entry: Dictionary = {}
@@ -32,7 +30,7 @@ func _ready() -> void:
 	rng.randomize()
 	_build_board()
 	camera.fit_board()
-	load_level(current_level)
+	load_level(GameState.selected_level)
 
 func _build_board() -> void:
 	floor_layer.clear()
@@ -61,7 +59,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			generate_procedural_maze("hard")
 		KEY_L:
 			load_level(_test_level)
-			_test_level = _test_level % _load_levels_data().size() + 1
+			_test_level = _test_level % GameState.get_levels().size() + 1
 
 func generate_procedural_maze(target_difficulty: String = "") -> void:
 	# Border ring stays fixed; only the interior is regenerated.
@@ -79,28 +77,12 @@ func generate_procedural_maze(target_difficulty: String = "") -> void:
 		goal, difficulty, MazeGenerator.difficulty_label(difficulty), rng.seed
 	])
 
-func _load_levels_data() -> Array:
-	if _levels_loaded:
-		return _levels_data
-	_levels_loaded = true
-	var file := FileAccess.open(LEVELS_PATH, FileAccess.READ)
-	if file == null:
-		push_error("load_level: %s not found — run tools/generate_levels.gd first" % LEVELS_PATH)
-		return []
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if typeof(parsed) != TYPE_ARRAY:
-		push_error("load_level: %s is not a valid levels array" % LEVELS_PATH)
-		return []
-	_levels_data = parsed
-	return _levels_data
-
 func load_level(level_number: int) -> void:
-	var levels := _load_levels_data()
-	if level_number < 1 or level_number > levels.size():
-		push_error("load_level: %d out of range (1..%d)" % [level_number, levels.size()])
+	var entry := GameState.get_level_entry(level_number)
+	if entry.is_empty():
+		push_error("load_level: %d out of range" % level_number)
 		return
 
-	var entry: Dictionary = levels[level_number - 1]
 	level_size = Vector2i(int(entry.size[0]), int(entry.size[1]))
 	_build_board()
 	camera.fit_board()
@@ -112,6 +94,7 @@ func load_level(level_number: int) -> void:
 	var start := Vector2i(int(entry.start[0]), int(entry.start[1]))
 
 	current_level = level_number
+	GameState.selected_level = level_number
 	_current_level_entry = entry
 	_start_level(bounds, walls, start)
 
@@ -133,19 +116,38 @@ func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
 	var touched: Dictionary = MazeGenerator.slide_bfs(walls, bounds, start).touched
 	player.total_paintable = touched.size()
 
+	hud_moves_label.text = "Moves: 0"
+	var min_moves := int(_current_level_entry.get("min_moves", -1))
+	hud_par_label.visible = min_moves > 0
+	if min_moves > 0:
+		hud_par_label.text = "Par: %d" % min_moves
+
 	player.paint_cell(start)
+
+func update_move_count(moves: int) -> void:
+	hud_moves_label.text = "Moves: %d" % moves
 
 func show_win_popup(moves: int) -> void:
 	var par := int(_current_level_entry.get("min_moves", -1))
-	win_popup.show_result(moves, par)
+	var stars := -1
+	if not _current_level_entry.is_empty():
+		var result := GameState.record_completion(current_level, moves)
+		stars = result.stars
+	win_popup.show_result(moves, par, stars)
 
 func go_to_next_level() -> void:
-	var levels := _load_levels_data()
+	var bounds := GameState.tier_bounds(GameState.tier_index_for_level(current_level))
 	var next := current_level + 1
-	if next > levels.size():
-		generate_procedural_maze() # out of stored levels — keep playing at the same (last tier's) grid size
+	if next > bounds.y:
+		go_to_level_select()
 		return
 	load_level(next)
+
+func retry_level() -> void:
+	load_level(current_level)
+
+func go_to_level_select() -> void:
+	get_tree().change_scene_to_file("res://level_select.tscn")
 
 func _paint_walls(bounds: Rect2i, walls: Dictionary) -> void:
 	for y in range(bounds.position.y, bounds.end.y):

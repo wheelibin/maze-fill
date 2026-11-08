@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://size_select.gd" id="1_sizeselect"]
+
+[node name="SizeSelect" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_sizeselect")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Select Board Size"
+
+[node name="SmallButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Small  14×6"
+
+[node name="MediumButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Medium  16×8"
+
+[node name="LargeButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Large  18×10"
+
+[node name="HugeButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "Huge  20×12"

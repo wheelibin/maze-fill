@@ -67,6 +67,30 @@ color = Color(1, 0.65, 0, 0.8)
 [node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
 script = ExtResource("3_feb5d")
 
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 300.0
+offset_bottom = 60.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MovesLabel" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Moves: 0"
+
+[node name="ParLabel" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Par: 0"
+
 [node name="WinPopup" type="CanvasLayer" parent="." unique_id=341938539]
 
 [node name="Panel" type="Panel" parent="WinPopup" unique_id=755129978]
@@ -77,9 +101,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -160.0
-offset_top = -100.0
+offset_top = -160.0
 offset_right = 160.0
-offset_bottom = 100.0
+offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7_winpopup")
@@ -107,6 +131,18 @@ horizontal_alignment = 1
 layout_mode = 2
 horizontal_alignment = 1
 
+[node name="StarsLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
 [node name="NextButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=753218675]
 layout_mode = 2
 text = "Next Level"
+
+[node name="RetryButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Retry"
+
+[node name="MenuButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back to Menu"

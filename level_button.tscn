@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://level_button.gd" id="1_levelbutton"]
+
+[node name="LevelButton" type="Button"]
+custom_minimum_size = Vector2(72, 56)
+script = ExtResource("1_levelbutton")

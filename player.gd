@@ -117,6 +117,7 @@ func slide(direction: Vector2i) -> void:
 		squash(direction)
 		play_wall_hit_note()
 		move_count += 1
+		main.update_move_count(move_count)
 		if not level_complete and painted_layer.get_used_cells().size() >= total_paintable:
 			level_complete = true
 			main.show_win_popup(move_count)
