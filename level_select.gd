@@ -3,9 +3,9 @@ extends Control
 const LevelButtonScene := preload("res://level_button.tscn")
 const TIER_LABELS := ["Small (14×6)", "Medium (16×8)", "Large (18×10)", "Huge (20×12)"]
 
-@onready var grid: GridContainer = $VBoxContainer/ScrollContainer/LevelGrid
+@onready var grid: GridContainer = $VBoxContainer/ScrollContainer/CenterContainer/LevelGrid
 @onready var header: Label = $VBoxContainer/TopBar/HeaderLabel
-@onready var back_button: Button = $VBoxContainer/TopBar/BackButton
+@onready var back_button: Button = $VBoxContainer/TopBar/Margin/BackButton
 
 func _ready() -> void:
 	back_button.pressed.connect(func(): get_tree().change_scene_to_file("res://size_select.tscn"))

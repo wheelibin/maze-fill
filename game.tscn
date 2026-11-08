@@ -67,29 +67,47 @@ color = Color(1, 0.65, 0, 0.8)
 [node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
 script = ExtResource("3_feb5d")
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1183876860]
 
-[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+[node name="Margin" type="MarginContainer" parent="HUD" unique_id=159644928]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 300.0
-offset_bottom = 60.0
+offset_right = 237.0
+offset_bottom = 64.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Panel" type="Panel" parent="HUD/Margin" unique_id=1379288360]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD/Margin/Panel" unique_id=1811924091]
+layout_mode = 0
+offset_left = -7.0
+offset_top = -9.0
+offset_right = 209.0
+offset_bottom = 39.0
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
+theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HUD/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/Margin/Panel/MarginContainer" unique_id=1787580752]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 20
 
-[node name="MovesLabel" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
+[node name="MovesLabel" type="Label" parent="HUD/Margin/Panel/MarginContainer/HBoxContainer" unique_id=1183461254]
 layout_mode = 2
-text = "Moves: 0"
+theme_override_colors/font_color = Color(0.235, 0.247, 0.31, 1)
+theme_override_font_sizes/font_size = 20
+text = "Moves: 99"
 
-[node name="ParLabel" type="Label" parent="HUD/MarginContainer/HBoxContainer"]
+[node name="ParLabel" type="Label" parent="HUD/Margin/Panel/MarginContainer/HBoxContainer" unique_id=2121464634]
 layout_mode = 2
-text = "Par: 0"
+theme_override_colors/font_color = Color(1, 0.647, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Par: 99"
 
 [node name="WinPopup" type="CanvasLayer" parent="." unique_id=341938539]
 
@@ -100,10 +118,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -160.0
-offset_right = 160.0
-offset_bottom = 160.0
+offset_left = -170.0
+offset_top = -220.0
+offset_right = 170.0
+offset_bottom = 220.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7_winpopup")
@@ -124,25 +142,31 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=15859624]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.235, 0.247, 0.31, 1)
+theme_override_font_sizes/font_size = 30
 text = "Level Complete!"
+horizontal_alignment = 1
+
+[node name="StarsLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=855746133]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.76, 0.03, 1)
+theme_override_font_sizes/font_size = 36
 horizontal_alignment = 1
 
 [node name="MovesLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=191273140]
 layout_mode = 2
-horizontal_alignment = 1
-
-[node name="StarsLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.47, 0.54, 1)
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 
 [node name="NextButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=753218675]
 layout_mode = 2
 text = "Next Level"
 
-[node name="RetryButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+[node name="RetryButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=1223177512]
 layout_mode = 2
 text = "Retry"
 
-[node name="MenuButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer"]
+[node name="MenuButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=796116355]
 layout_mode = 2
 text = "Back to Menu"

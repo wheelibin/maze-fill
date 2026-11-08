@@ -2,10 +2,18 @@
 
 [ext_resource type="Script" path="res://size_select.gd" id="1_sizeselect"]
 
+[sub_resource type="StyleBoxFlat" id="Background"]
+bg_color = Color(0.945, 0.949, 0.973, 1)
+
 [node name="SizeSelect" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_sizeselect")
+
+[node name="Background" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("Background")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -13,25 +21,46 @@ anchor_bottom = 1.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 20
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.235, 0.247, 0.31, 1)
 horizontal_alignment = 1
-text = "Select Board Size"
+text = "Maze Fill"
+
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.45, 0.47, 0.54, 1)
+horizontal_alignment = 1
+text = "Select a board size"
+
+[node name="Spacer" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
 
 [node name="SmallButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
-text = "Small  14×6"
+text = "Small
+14 × 6"
 
 [node name="MediumButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
-text = "Medium  16×8"
+text = "Medium
+16 × 8"
 
 [node name="LargeButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
-text = "Large  18×10"
+text = "Large
+18 × 10"
 
 [node name="HugeButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
-text = "Huge  20×12"
+text = "Huge
+20 × 12"

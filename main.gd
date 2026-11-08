@@ -18,8 +18,8 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var player = $Board/Player
 @onready var camera: Camera2D = $Board/Camera2D
 @onready var win_popup = $WinPopup/Panel
-@onready var hud_moves_label: Label = $HUD/MarginContainer/HBoxContainer/MovesLabel
-@onready var hud_par_label: Label = $HUD/MarginContainer/HBoxContainer/ParLabel
+@onready var hud_moves_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/MovesLabel
+@onready var hud_par_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/ParLabel
 
 var rng := RandomNumberGenerator.new()
 var _test_level := 1

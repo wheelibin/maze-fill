@@ -26,6 +26,10 @@ window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[gui]
+
+theme/custom="res://game_theme.tres"
+
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
