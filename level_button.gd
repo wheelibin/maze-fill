@@ -7,7 +7,7 @@ const LOCKED_GREY := Color(0.82, 0.84, 0.88, 1)
 const LOCKED_GREY_TEXT := Color(0.6, 0.63, 0.7, 1)
 const WHITE := Color(1, 1, 1, 1)
 
-@onready var stars_label: Label = $StarsLabel
+@onready var stars_label := $StarsLabel
 
 func configure(local: int, unlocked: bool, completed: bool, stars: int, best_moves: int) -> void:
 	disabled = not unlocked
@@ -18,7 +18,7 @@ func configure(local: int, unlocked: bool, completed: bool, stars: int, best_mov
 	if not unlocked:
 		_style(LOCKED_GREY, LOCKED_GREY, LOCKED_GREY_TEXT)
 	elif completed:
-		stars_label.text = "★".repeat(stars) + "☆".repeat(3 - stars)
+		stars_label.stars = stars
 		tooltip_text = "Best: %d moves" % best_moves
 		_style(TEAL, TEAL_DARK, NAVY)
 	else:

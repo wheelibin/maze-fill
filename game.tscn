@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://ubmdcft4hb8v" path="res://main.gd" id="4_main"]
 [ext_resource type="Shader" uid="uid://dvle2b0hfk4f1" path="res://wall_shadow_blur.gdshader" id="5_shadow_blur"]
 [ext_resource type="Script" uid="uid://cgwy7fcvf5kca" path="res://win_popup.gd" id="7_winpopup"]
+[ext_resource type="PackedScene" path="res://star_rating.tscn" id="8_starrating"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_blur"]
 shader = ExtResource("5_shadow_blur")
@@ -158,11 +159,9 @@ theme_override_font_sizes/font_size = 30
 text = "Level Complete!"
 horizontal_alignment = 1
 
-[node name="StarsLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=855746133]
+[node name="StarsLabel" parent="WinPopup/Panel/MarginContainer/VBoxContainer" instance=ExtResource("8_starrating")]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.76, 0.03, 1)
-theme_override_font_sizes/font_size = 36
-horizontal_alignment = 1
+custom_minimum_size = Vector2(0, 48)
 
 [node name="MovesLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=191273140]
 layout_mode = 2

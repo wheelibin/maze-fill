@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://star_rating.gd" id="1_starrating"]
+
+[node name="StarRating" type="Control"]
+script = ExtResource("1_starrating")
