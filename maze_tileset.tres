@@ -10,6 +10,20 @@ texture_region_size = Vector2i(64, 64)
 2:0/0 = 0
 3:0/0 = 0
 
+[sub_resource type="Gradient" id="Gradient_paintwhite"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_paintwhite"]
+gradient = SubResource("Gradient_paintwhite")
+width = 64
+height = 64
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_paintwhite"]
+texture = SubResource("GradientTexture2D_paintwhite")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
 [resource]
 tile_size = Vector2i(64, 64)
 sources/2 = SubResource("TileSetAtlasSource_k1j2a")
+sources/5 = SubResource("TileSetAtlasSource_paintwhite")

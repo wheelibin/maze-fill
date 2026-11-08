@@ -8,6 +8,22 @@ const TIER_COUNT := 4
 var selected_size_index := 0 # 0=Small(14x6) 1=Medium(16x8) 2=Large(18x10) 3=Huge(20x12)
 var selected_level := 1 # global level number, 1..1000
 
+## Flat paint colors, picked to read well against the lavender floor/navy
+## walls while staying clear of the player's orange and the gold stars.
+const PAINT_COLORS: Array[Color] = [
+	Color(0.31, 0.851, 0.69, 1), # teal
+	Color(0.31, 0.72, 0.91, 1),  # sky blue
+	Color(0.49, 0.51, 0.95, 1),  # periwinkle
+	Color(0.68, 0.49, 0.95, 1),  # orchid
+	Color(0.95, 0.42, 0.65, 1),  # rose
+	Color(0.95, 0.48, 0.45, 1),  # coral
+	Color(0.56, 0.85, 0.42, 1),  # lime
+	Color(0.35, 0.87, 0.87, 1),  # aqua
+]
+
+func paint_color_for_level(global_level: int) -> Color:
+	return PAINT_COLORS[(global_level - 1) % PAINT_COLORS.size()]
+
 var _levels_data: Array = []
 var _levels_loaded := false
 var _save_data: Dictionary = {}

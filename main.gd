@@ -20,6 +20,7 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var win_popup = $WinPopup/Panel
 @onready var hud_moves_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/MovesLabel
 @onready var hud_par_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/ParLabel
+@onready var menu_button: Button = $HUD/MenuButton
 
 var rng := RandomNumberGenerator.new()
 var _test_level := 1
@@ -28,6 +29,7 @@ var _current_level_entry: Dictionary = {}
 
 func _ready() -> void:
 	rng.randomize()
+	menu_button.pressed.connect(go_to_level_select)
 	_build_board()
 	camera.fit_board()
 	load_level(GameState.selected_level)
@@ -105,6 +107,7 @@ func load_level(level_number: int) -> void:
 func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
 	_paint_walls(bounds, walls)
 	painted_layer.clear()
+	painted_layer.modulate = GameState.paint_color_for_level(current_level)
 
 	player.grid_pos = start
 	player.position = floor_layer.map_to_local(start)
