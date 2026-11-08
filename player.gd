@@ -2,6 +2,7 @@ extends Node2D
 
 @export var color: Color = Color.ORANGE
 @export var slide_speed: float = 4000.0
+const RADIUS := 24.0
 
 @onready var floor_layer: TileMapLayer = $"../Floor"
 @onready var wall_layer: TileMapLayer = $"../Walls"
@@ -64,7 +65,7 @@ func _rebuild_note_streams() -> void:
 		_note_streams[i] = _build_note_stream(freq)
 
 func _draw() -> void:
-	draw_rect(Rect2(-24, -24, 48, 48), color)
+	draw_circle(Vector2.ZERO, RADIUS, color, true)
 
 func _process(_delta: float) -> void:
 	if moving:
