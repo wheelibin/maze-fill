@@ -1,5 +1,7 @@
 extends Panel
 
+const UIColors := preload("res://ui_colors.gd")
+
 @onready var main = $"../.."
 @onready var title_label: Label = $MarginContainer/VBoxContainer/TitleLabel
 @onready var moves_label: Label = $MarginContainer/VBoxContainer/MovesLabel
@@ -8,11 +10,6 @@ extends Panel
 @onready var retry_button: Button = $MarginContainer/VBoxContainer/RetryButton
 @onready var menu_button: Button = $MarginContainer/VBoxContainer/MenuButton
 
-const NAVY := Color(0.235, 0.247, 0.31, 1)
-const TEAL := Color(0.31, 0.851, 0.69, 1)
-const TEAL_HOVER := Color(0.22, 0.74, 0.6, 1)
-const TEAL_PRESSED := Color(0.17, 0.6, 0.49, 1)
-
 func _ready() -> void:
 	next_button.pressed.connect(_on_next_pressed)
 	retry_button.pressed.connect(func(): main.retry_level())
@@ -20,7 +17,7 @@ func _ready() -> void:
 
 	# Swapped from before: Next now gets the teal that used to be Retry's,
 	# Retry keeps the theme's default orange that used to be Next's.
-	_recolor_button(next_button, TEAL, TEAL_HOVER, TEAL_PRESSED, NAVY)
+	_recolor_button(next_button, UIColors.TEAL, UIColors.TEAL_HOVER, UIColors.TEAL_DARK, UIColors.NAVY)
 	_make_outline_button(menu_button)
 
 ## Secondary action: same rounded shape as the theme's primary button, just
@@ -53,9 +50,9 @@ func _make_outline_button(button: Button) -> void:
 		box.border_width_top = 1.5
 		box.border_width_right = 1.5
 		box.border_width_bottom = 1.5
-		box.border_color = NAVY.lerp(Color.WHITE, 0.45)
+		box.border_color = UIColors.NAVY.lerp(Color.WHITE, 0.45)
 		button.add_theme_stylebox_override(state, box)
-	var font_color := NAVY.lerp(Color.WHITE, 0.15)
+	var font_color := UIColors.NAVY.lerp(Color.WHITE, 0.15)
 	button.add_theme_color_override("font_color", font_color)
 	button.add_theme_color_override("font_hover_color", font_color)
 	button.add_theme_color_override("font_pressed_color", font_color)

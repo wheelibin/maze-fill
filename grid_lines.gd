@@ -1,8 +1,10 @@
 extends Control
 
+const UIColors := preload("res://ui_colors.gd")
+
 ## Subtle graph-paper grid over the menu background, echoing the game board.
 @export var cell_size: float = 64.0
-@export var line_color: Color = Color(0.235, 0.247, 0.31, 0.08)
+@export var line_color: Color = Color(UIColors.NAVY, 0.08)
 @export var line_width: float = 1.0
 
 func _ready() -> void:

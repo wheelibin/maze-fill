@@ -1,5 +1,7 @@
 extends Control
 
+const UIColors := preload("res://ui_colors.gd")
+
 ## Draws max_stars 5-point stars evenly across this control's own rect --
 ## filled for earned stars, outlined for the rest. No font/glyph involved,
 ## so it renders identically regardless of what fonts an export has access to.
@@ -8,7 +10,7 @@ extends Control
 	set(value):
 		stars = value
 		queue_redraw()
-@export var fill_color: Color = Color(1, 0.82, 0.1, 1)
+@export var fill_color: Color = UIColors.GOLD
 @export var empty_outline_color: Color = Color(0.65, 0.65, 0.67, 1)
 @export var outline_width: float = 1.2
 @export var padding_fraction: float = 0.12

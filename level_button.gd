@@ -1,11 +1,6 @@
 extends Button
 
-const NAVY := Color(0.235, 0.247, 0.31, 1)
-const TEAL := Color(0.31, 0.851, 0.69, 1)
-const TEAL_DARK := Color(0.2, 0.68, 0.54, 1)
-const LOCKED_GREY := Color(0.82, 0.84, 0.88, 1)
-const LOCKED_GREY_TEXT := Color(0.6, 0.63, 0.7, 1)
-const WHITE := Color(1, 1, 1, 1)
+const UIColors := preload("res://ui_colors.gd")
 
 @onready var stars_label := $StarsLabel
 
@@ -16,22 +11,25 @@ func configure(local: int, unlocked: bool, completed: bool, stars: int, best_mov
 	stars_label.visible = completed
 
 	if not unlocked:
-		_style(LOCKED_GREY, LOCKED_GREY, LOCKED_GREY_TEXT)
+		_style(UIColors.DISABLED_BG, UIColors.DISABLED_BG, UIColors.DISABLED_TEXT)
 	elif completed:
 		stars_label.stars = stars
 		tooltip_text = "Best: %d moves" % best_moves
-		_style(TEAL, TEAL_DARK, NAVY)
+		_style(UIColors.TEAL, UIColors.TEAL_DARK, UIColors.NAVY)
 	else:
-		_style(WHITE, NAVY, NAVY)
+		_style(Color.WHITE, UIColors.NAVY, UIColors.NAVY)
 
 func _style(bg: Color, border: Color, font_color: Color) -> void:
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		var box := StyleBoxFlat.new()
 		box.bg_color = bg
-		box.corner_radius_top_left = 10
-		box.corner_radius_top_right = 10
-		box.corner_radius_bottom_left = 10
-		box.corner_radius_bottom_right = 10
+		# Matches the global theme's button radius (game_theme.tres) --
+		# these tiles used to be 10px, visibly less rounded than every
+		# other button in the game.
+		box.corner_radius_top_left = 16
+		box.corner_radius_top_right = 16
+		box.corner_radius_bottom_left = 16
+		box.corner_radius_bottom_right = 16
 		box.border_width_bottom = 3
 		box.border_color = border
 		box.content_margin_bottom = 16
