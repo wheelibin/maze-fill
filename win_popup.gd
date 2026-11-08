@@ -18,8 +18,10 @@ func _ready() -> void:
 	retry_button.pressed.connect(func(): main.retry_level())
 	menu_button.pressed.connect(func(): main.go_to_level_select())
 
-	_recolor_button(retry_button, TEAL, TEAL_HOVER, TEAL_PRESSED, NAVY)
-	_make_ghost_button(menu_button)
+	# Swapped from before: Next now gets the teal that used to be Retry's,
+	# Retry keeps the theme's default orange that used to be Next's.
+	_recolor_button(next_button, TEAL, TEAL_HOVER, TEAL_PRESSED, NAVY)
+	_make_outline_button(menu_button)
 
 ## Secondary action: same rounded shape as the theme's primary button, just
 ## a different fill color -- keeps the family look without a second theme.
@@ -33,14 +35,30 @@ func _recolor_button(button: Button, normal: Color, hover: Color, pressed: Color
 	button.add_theme_color_override("font_hover_color", font_color)
 	button.add_theme_color_override("font_pressed_color", font_color)
 
-## Tertiary action: no fill, just text -- visually the least prominent of
-## the three buttons so it doesn't compete with Next/Retry.
-func _make_ghost_button(button: Button) -> void:
-	var empty := StyleBoxEmpty.new()
-	for state in ["normal", "hover", "pressed"]:
-		button.add_theme_stylebox_override(state, empty)
-	button.add_theme_color_override("font_color", NAVY.lerp(Color.WHITE, 0.3))
-	button.add_theme_color_override("font_hover_color", NAVY)
+## Tertiary action: same rounded shape as the other buttons but outlined
+## instead of filled, so it still reads as a button while staying visually
+## quieter than Next/Retry.
+func _make_outline_button(button: Button) -> void:
+	var bg_by_state := {
+		"normal": Color(1, 1, 1, 1),
+		"hover": Color(0.95, 0.96, 0.98, 1),
+		"pressed": Color(0.88, 0.89, 0.93, 1),
+	}
+	for state in bg_by_state:
+		var base: StyleBox = button.get_theme_stylebox("normal")
+		var box: StyleBoxFlat = base.duplicate()
+		box.bg_color = bg_by_state[state]
+		box.shadow_size = 0
+		box.border_width_left = 1.5
+		box.border_width_top = 1.5
+		box.border_width_right = 1.5
+		box.border_width_bottom = 1.5
+		box.border_color = NAVY.lerp(Color.WHITE, 0.45)
+		button.add_theme_stylebox_override(state, box)
+	var font_color := NAVY.lerp(Color.WHITE, 0.15)
+	button.add_theme_color_override("font_color", font_color)
+	button.add_theme_color_override("font_hover_color", font_color)
+	button.add_theme_color_override("font_pressed_color", font_color)
 
 func show_result(moves: int, par: int = -1, stars: int = -1) -> void:
 	title_label.text = "Level Complete!"

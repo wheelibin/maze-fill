@@ -21,6 +21,7 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var hud_moves_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/MovesLabel
 @onready var hud_par_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/ParLabel
 @onready var menu_button: Button = $HUD/MenuButton
+@onready var restart_button: Button = $HUD/RestartButton
 
 var rng := RandomNumberGenerator.new()
 var _test_level := 1
@@ -30,6 +31,7 @@ var _current_level_entry: Dictionary = {}
 func _ready() -> void:
 	rng.randomize()
 	menu_button.pressed.connect(go_to_level_select)
+	restart_button.pressed.connect(retry_level)
 	_build_board()
 	camera.fit_board()
 	load_level(GameState.selected_level)
