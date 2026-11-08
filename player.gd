@@ -106,8 +106,8 @@ func slide(direction: Vector2i) -> void:
 	)
 
 	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_QUAD)
-	tween.set_ease(Tween.EASE_IN)
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "position", destination, duration)
 
 	tween.finished.connect(func():
