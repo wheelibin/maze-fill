@@ -15,8 +15,6 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_paintwhite"]
 gradient = SubResource("Gradient_paintwhite")
-width = 64
-height = 64
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_paintwhite"]
 texture = SubResource("GradientTexture2D_paintwhite")

@@ -24,6 +24,20 @@ const PAINT_COLORS: Array[Color] = [
 func paint_color_for_level(global_level: int) -> Color:
 	return PAINT_COLORS[(global_level - 1) % PAINT_COLORS.size()]
 
+## Rotations of the same anhemitonic pentatonic scale -- different mood per
+## level, but never a half-step or tritone between adjacent degrees, so the
+## wall-hit note sequence always sounds musical regardless of play order.
+const SCALE_SETS: Array[Array] = [
+	[0, 2, 4, 7, 9, 12, 14, 16],   # major pentatonic
+	[0, 2, 5, 7, 10, 12, 14, 17],  # suspended / Egyptian
+	[0, 3, 5, 8, 10, 12, 15, 17],  # blues minor / man gong
+	[0, 2, 5, 7, 9, 12, 14, 17],   # yo / ritsu
+	[0, 3, 5, 7, 10, 12, 15, 17],  # minor pentatonic
+]
+
+func scale_for_level(global_level: int) -> Array:
+	return SCALE_SETS[(global_level - 1) % SCALE_SETS.size()]
+
 var _levels_data: Array = []
 var _levels_loaded := false
 var _save_data: Dictionary = {}

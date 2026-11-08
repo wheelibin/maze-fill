@@ -108,6 +108,7 @@ func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
 	_paint_walls(bounds, walls)
 	painted_layer.clear()
 	painted_layer.modulate = GameState.paint_color_for_level(current_level)
+	player.set_level_scale(GameState.scale_for_level(current_level))
 
 	player.grid_pos = start
 	player.position = floor_layer.map_to_local(start)

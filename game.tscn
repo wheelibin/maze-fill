@@ -109,15 +109,15 @@ theme_override_colors/font_color = Color(1, 0.647, 0, 1)
 theme_override_font_sizes/font_size = 20
 text = "Par: 99"
 
-[node name="MenuButton" type="Button" parent="HUD"]
+[node name="MenuButton" type="Button" parent="HUD" unique_id=275838145]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-grow_horizontal = 0
 offset_left = -96.0
 offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 56.0
+grow_horizontal = 0
 text = "Menu"
 
 [node name="WinPopup" type="CanvasLayer" parent="." unique_id=341938539]

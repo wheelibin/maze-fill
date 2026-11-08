@@ -30,10 +30,8 @@ const NOTE_DURATION := 0.12
 const NOTE_ATTACK := 0.05 # fraction of NOTE_DURATION
 const NOTE_RELEASE := 0.4 # fraction of NOTE_DURATION
 const ROOT_FREQ := 220.0
-## Pentatonic semitone offsets — no dissonant steps, so any order sounds musical.
-const SCALE_SEMITONES := [0, 2, 4, 7, 9, 12, 14, 16]
-#const SCALE_SEMITONES := [0]
 
+var _scale_semitones: Array = GameState.SCALE_SETS[0]
 var _scale_step := 0
 var _scale_direction := 1
 var _note_streams: Array[AudioStreamWAV] = []
@@ -42,17 +40,27 @@ func _ready() -> void:
 	position = floor_layer.map_to_local(grid_pos)
 	paint_cell(grid_pos)
 	last_painted_cell = grid_pos
+	_rebuild_note_streams()
 
-	# Precomputed once into finite AudioStreamWAVs, played via plain
-	# .play(). Previously used AudioStreamGenerator's manual ring buffer,
-	# but that assumes continuous real-time consumption — on mobile,
-	# backgrounding the tab suspends the Web Audio context, and the
-	# generator's frame bookkeeping doesn't recover cleanly on resume,
-	# leaving a permanent growing delay for the rest of the session. A
-	# finite, fully-managed stream has no such state to desync.
-	_note_streams.resize(SCALE_SEMITONES.size())
-	for i in SCALE_SEMITONES.size():
-		var freq := ROOT_FREQ * pow(2.0, SCALE_SEMITONES[i] / 12.0)
+## Called by main.gd when a level loads, so each level's wall-hit notes use
+## a different rotation of the pentatonic scale (see GameState.SCALE_SETS).
+func set_level_scale(semitones: Array) -> void:
+	_scale_semitones = semitones
+	_scale_step = 0
+	_scale_direction = 1
+	_rebuild_note_streams()
+
+# Precomputed once into finite AudioStreamWAVs, played via plain .play().
+# Previously used AudioStreamGenerator's manual ring buffer, but that
+# assumes continuous real-time consumption — on mobile, backgrounding the
+# tab suspends the Web Audio context, and the generator's frame bookkeeping
+# doesn't recover cleanly on resume, leaving a permanent growing delay for
+# the rest of the session. A finite, fully-managed stream has no such state
+# to desync.
+func _rebuild_note_streams() -> void:
+	_note_streams.resize(_scale_semitones.size())
+	for i in _scale_semitones.size():
+		var freq := ROOT_FREQ * pow(2.0, _scale_semitones[i] / 12.0)
 		_note_streams[i] = _build_note_stream(freq)
 
 func _draw() -> void:
@@ -142,7 +150,7 @@ func squash(direction: Vector2i) -> void:
 	_squash_tween.tween_property(self, "scale", Vector2.ONE, SQUASH_SETTLE_DURATION) \
 		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
-## Plays a precomputed blip, picking a note from SCALE_SEMITONES each hit
+## Plays a precomputed blip, picking a note from _scale_semitones each hit
 ## so it always sounds musical without ever repeating a predictable pattern.
 func play_wall_hit_note() -> void:
 	wall_hit_sound.stream = _note_streams[_sequential_scale_step()]
@@ -174,13 +182,13 @@ func _build_note_stream(freq: float) -> AudioStreamWAV:
 	return stream
 
 func _random_scale_step() -> int:
-	return randi() % SCALE_SEMITONES.size()
+	return randi() % _scale_semitones.size()
 
 # walk up and down the scale, bouncing direction at either end
 func _sequential_scale_step() -> int:
 	var step := _scale_step
 	_scale_step += _scale_direction
-	if _scale_step >= SCALE_SEMITONES.size() - 1 or _scale_step <= 0:
+	if _scale_step >= _scale_semitones.size() - 1 or _scale_step <= 0:
 		_scale_direction *= -1
 	return step
 
