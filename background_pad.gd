@@ -38,7 +38,8 @@ func _ready() -> void:
 	_timer.timeout.connect(_on_timeout)
 
 	_rebuild_note_streams()
-	_schedule_next()
+	if GameState.get_music_enabled():
+		_schedule_next()
 
 ## Called on level complete: stops scheduling new notes and fades out
 ## whatever's currently sounding, rather than leaving it to ring out on its
@@ -66,8 +67,9 @@ func resume() -> void:
 			_fade_tweens[i] = null
 		_voices[i].stop()
 		_voices[i].volume_db = VOLUME_DB
-	_play_random_note()
-	_schedule_next()
+	if GameState.get_music_enabled():
+		_play_random_note()
+		_schedule_next()
 
 ## Called by main.gd when a level loads, so the pad always harmonizes with
 ## that level's wall-hit notes (see GameState.SCALE_SETS).

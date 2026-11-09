@@ -83,3 +83,15 @@ text = "HUGE
 20 × 12"
 
 [node name="Sheen" parent="CenterContainer/VBoxContainer/HugeButton" instance=ExtResource("3_sheen")]
+
+[node name="Spacer2" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "OPTIONS"
+
+[node name="Sheen" parent="CenterContainer/VBoxContainer/OptionsButton" instance=ExtResource("3_sheen")]

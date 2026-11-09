@@ -95,6 +95,17 @@ func _write_save() -> void:
 		return
 	file.store_string(JSON.stringify(_save_data))
 
+## Stored in the same save file under a non-numeric key, so it can't collide
+## with the per-level progress entries (keyed by str(global_level)).
+func get_music_enabled() -> bool:
+	_load_save()
+	return _save_data.get("music_enabled", false)
+
+func set_music_enabled(enabled: bool) -> void:
+	_load_save()
+	_save_data["music_enabled"] = enabled
+	_write_save()
+
 func get_progress(global_level: int) -> Dictionary:
 	_load_save()
 	var entry: Dictionary = _save_data.get(str(global_level), {})
