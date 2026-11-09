@@ -38,7 +38,7 @@ theme_override_constants/margin_top = 16
 
 [node name="BackButton" type="Button" parent="VBoxContainer/TopBar/Margin"]
 layout_mode = 2
-text = "Back"
+text = "BACK"
 
 [node name="Sheen" parent="VBoxContainer/TopBar/Margin/BackButton" instance=ExtResource("3_sheen")]
 

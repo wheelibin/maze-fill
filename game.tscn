@@ -115,12 +115,12 @@ text = "Par: 99"
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -204.0
+offset_left = -208.0
 offset_top = 16.0
-offset_right = -108.0
+offset_right = -112.0
 offset_bottom = 56.0
 grow_horizontal = 0
-text = "Restart"
+text = "RESTART"
 
 [node name="Sheen" parent="HUD/RestartButton" unique_id=612543975 instance=ExtResource("9_sheen")]
 layout_mode = 0
@@ -134,7 +134,7 @@ offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 56.0
 grow_horizontal = 0
-text = "Menu"
+text = "MENU"
 
 [node name="Sheen" parent="HUD/MenuButton" unique_id=1721699610 instance=ExtResource("9_sheen")]
 layout_mode = 0
@@ -189,21 +189,21 @@ horizontal_alignment = 1
 
 [node name="NextButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=753218675]
 layout_mode = 2
-text = "Next Level"
+text = "NEXT LEVEL"
 
 [node name="Sheen" parent="WinPopup/Panel/MarginContainer/VBoxContainer/NextButton" unique_id=1460660727 instance=ExtResource("9_sheen")]
 layout_mode = 0
 
 [node name="RetryButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=1223177512]
 layout_mode = 2
-text = "Retry"
+text = "RETRY"
 
 [node name="Sheen" parent="WinPopup/Panel/MarginContainer/VBoxContainer/RetryButton" unique_id=305255640 instance=ExtResource("9_sheen")]
 layout_mode = 0
 
 [node name="MenuButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=796116355]
 layout_mode = 2
-text = "Back to Menu"
+text = "BACK TO MENU"
 
 [node name="Sheen" parent="WinPopup/Panel/MarginContainer/VBoxContainer/MenuButton" unique_id=85527401 instance=ExtResource("9_sheen")]
 layout_mode = 0

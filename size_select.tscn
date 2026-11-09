@@ -52,7 +52,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Small
+text = "SMALL
 14 × 6"
 
 [node name="Sheen" parent="CenterContainer/VBoxContainer/SmallButton" instance=ExtResource("3_sheen")]
@@ -61,7 +61,7 @@ text = "Small
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Medium
+text = "MEDIUM
 16 × 8"
 
 [node name="Sheen" parent="CenterContainer/VBoxContainer/MediumButton" instance=ExtResource("3_sheen")]
@@ -70,7 +70,7 @@ text = "Medium
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Large
+text = "LARGE
 18 × 10"
 
 [node name="Sheen" parent="CenterContainer/VBoxContainer/LargeButton" instance=ExtResource("3_sheen")]
@@ -79,7 +79,7 @@ text = "Large
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Huge
+text = "HUGE
 20 × 12"
 
 [node name="Sheen" parent="CenterContainer/VBoxContainer/HugeButton" instance=ExtResource("3_sheen")]
