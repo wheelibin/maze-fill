@@ -22,7 +22,14 @@ func configure(local: int, unlocked: bool, completed: bool, stars: int, best_mov
 func _style(bg: Color, border: Color, font_color: Color) -> void:
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		var box := StyleBoxFlat.new()
-		box.bg_color = bg
+		# Matches game_theme.tres's own hover/pressed shading so these tiles
+		# give the same press feedback as every other button in the game.
+		var state_bg := bg
+		if state == "hover":
+			state_bg = bg.lightened(0.12)
+		elif state == "pressed":
+			state_bg = bg.darkened(0.15)
+		box.bg_color = state_bg
 		# Matches the global theme's button radius (game_theme.tres) --
 		# these tiles used to be 10px, visibly less rounded than every
 		# other button in the game.

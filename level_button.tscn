@@ -2,10 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bo5ufiw1ynnnv" path="res://level_button.gd" id="1_levelbutton"]
 [ext_resource type="PackedScene" path="res://star_rating.tscn" id="2_starrating"]
+[ext_resource type="PackedScene" path="res://button_sheen.tscn" id="3_sheen"]
 
 [node name="LevelButton" type="Button" unique_id=452348313]
 custom_minimum_size = Vector2(72, 56)
 script = ExtResource("1_levelbutton")
+
+[node name="Sheen" parent="." instance=ExtResource("3_sheen")]
 
 [node name="StarsLabel" parent="." instance=ExtResource("2_starrating")]
 layout_mode = 1

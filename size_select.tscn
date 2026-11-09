@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://size_select.gd" id="1_sizeselect"]
 [ext_resource type="Script" path="res://grid_lines.gd" id="2_gridlines"]
+[ext_resource type="PackedScene" path="res://button_sheen.tscn" id="3_sheen"]
 
 [sub_resource type="StyleBoxFlat" id="Background"]
 bg_color = Color(0.945, 0.949, 0.973, 1)
@@ -53,11 +54,15 @@ layout_mode = 2
 text = "Small
 14 × 6"
 
+[node name="Sheen" parent="CenterContainer/VBoxContainer/SmallButton" instance=ExtResource("3_sheen")]
+
 [node name="MediumButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 text = "Medium
 16 × 8"
+
+[node name="Sheen" parent="CenterContainer/VBoxContainer/MediumButton" instance=ExtResource("3_sheen")]
 
 [node name="LargeButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
@@ -65,8 +70,12 @@ layout_mode = 2
 text = "Large
 18 × 10"
 
+[node name="Sheen" parent="CenterContainer/VBoxContainer/LargeButton" instance=ExtResource("3_sheen")]
+
 [node name="HugeButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 text = "Huge
 20 × 12"
+
+[node name="Sheen" parent="CenterContainer/VBoxContainer/HugeButton" instance=ExtResource("3_sheen")]
