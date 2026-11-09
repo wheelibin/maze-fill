@@ -13,12 +13,9 @@ config_version=5
 config/name="Paint Flow"
 run/main_scene="res://size_select.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon_1024.png"
-boot_splash/show_image=true
-boot_splash/image="res://splash_landscape_1920x1080.png"
-boot_splash/fullsize=true
-boot_splash/use_filter=true
 boot_splash/bg_color=Color(0.953, 0.949, 0.988, 1)
+boot_splash/image="res://splash_landscape_1920x1080.png"
+config/icon="res://icon_1024.png"
 
 [autoload]
 

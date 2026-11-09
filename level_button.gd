@@ -37,7 +37,7 @@ func _style(bg: Color, border: Color, font_color: Color) -> void:
 		box.corner_radius_top_right = 16
 		box.corner_radius_bottom_left = 16
 		box.corner_radius_bottom_right = 16
-		box.border_width_bottom = 3
+		box.border_width_bottom = 4
 		box.border_color = border
 		box.content_margin_bottom = 16
 		add_theme_stylebox_override(state, box)

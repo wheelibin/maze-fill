@@ -27,6 +27,10 @@ func _recolor_button(button: Button, normal: Color, hover: Color, pressed: Color
 		var base: StyleBox = button.get_theme_stylebox("normal")
 		var box: StyleBoxFlat = base.duplicate()
 		box.bg_color = {"normal": normal, "hover": hover, "pressed": pressed}[state]
+		if state == "pressed":
+			box.border_width_bottom = 0
+		else:
+			box.border_color = pressed
 		button.add_theme_stylebox_override(state, box)
 	button.add_theme_color_override("font_color", font_color)
 	button.add_theme_color_override("font_hover_color", font_color)

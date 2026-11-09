@@ -51,6 +51,7 @@ layout_mode = 2
 [node name="SmallButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Small
 14 × 6"
 
@@ -59,6 +60,7 @@ text = "Small
 [node name="MediumButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Medium
 16 × 8"
 
@@ -67,6 +69,7 @@ text = "Medium
 [node name="LargeButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Large
 18 × 10"
 
@@ -75,6 +78,7 @@ text = "Large
 [node name="HugeButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Huge
 20 × 12"
 
