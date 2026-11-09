@@ -3,7 +3,7 @@ extends Camera2D
 @export_range(0.0, 0.4) var margin: float = 0.05
 ## Desktop only (no touchscreen) — never zoom in past this, so the board
 ## doesn't balloon on huge monitors. Mobile always fills to the viewport.
-@export var max_zoom_desktop: float = 2.0
+@export var max_zoom_desktop: float = 1.0
 
 @onready var floor_layer: TileMapLayer = $"../Floor"
 
@@ -38,7 +38,17 @@ func fit_board() -> void:
 		available.x / board_size.x,
 		available.y / board_size.y
 	)
-	if not DisplayServer.is_touchscreen_available():
+	if not _is_touch_primary():
 		factor = minf(factor, max_zoom_desktop)
 
 	zoom = Vector2.ONE * factor
+
+
+## DisplayServer.is_touchscreen_available() on the Web export just checks
+## 'ontouchstart' in window, which is true on most desktop Chromium browsers
+## regardless of hardware -- so it never gates max_zoom_desktop there. The
+## pointer:coarse media query reflects the actual primary input device.
+func _is_touch_primary() -> bool:
+	if OS.has_feature("web"):
+		return JavaScriptBridge.eval("window.matchMedia('(pointer: coarse)').matches", true)
+	return DisplayServer.is_touchscreen_available()

@@ -2,6 +2,9 @@
 .godot/
 /android/
 
+# Local web export output
+/build/
+
 # Generator run output, not source
 generator/*.txt
 generator/*.log
