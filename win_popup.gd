@@ -1,6 +1,7 @@
 extends Panel
 
 const UIColors := preload("res://ui_colors.gd")
+const ButtonStyle := preload("res://button_style.gd")
 
 @onready var main = $"../.."
 @onready var title_label: Label = $MarginContainer/VBoxContainer/TitleLabel
@@ -23,18 +24,11 @@ func _ready() -> void:
 ## Secondary action: same rounded shape as the theme's primary button, just
 ## a different fill color -- keeps the family look without a second theme.
 func _recolor_button(button: Button, normal: Color, hover: Color, pressed: Color, font_color: Color) -> void:
-	for state in ["normal", "hover", "pressed"]:
-		var base: StyleBox = button.get_theme_stylebox("normal")
-		var box: StyleBoxFlat = base.duplicate()
-		box.bg_color = {"normal": normal, "hover": hover, "pressed": pressed}[state]
-		if state == "pressed":
-			box.border_width_bottom = 0
-		else:
-			box.border_color = pressed
-		button.add_theme_stylebox_override(state, box)
-	button.add_theme_color_override("font_color", font_color)
-	button.add_theme_color_override("font_hover_color", font_color)
-	button.add_theme_color_override("font_pressed_color", font_color)
+	var base: StyleBox = button.get_theme_stylebox("normal")
+	var bg_by_state := {"normal": normal, "hover": hover, "pressed": pressed}
+	for state in bg_by_state:
+		button.add_theme_stylebox_override(state, ButtonStyle.build_state(state, bg_by_state[state], pressed, base))
+	ButtonStyle.apply_font_color(button, font_color, false)
 
 ## Tertiary action: same rounded shape as the other buttons but outlined
 ## instead of filled, so it still reads as a button while staying visually

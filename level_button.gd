@@ -1,6 +1,7 @@
 extends Button
 
 const UIColors := preload("res://ui_colors.gd")
+const ButtonStyle := preload("res://button_style.gd")
 
 @onready var stars_label := $StarsLabel
 
@@ -21,7 +22,6 @@ func configure(local: int, unlocked: bool, completed: bool, stars: int, best_mov
 
 func _style(bg: Color, border: Color, font_color: Color) -> void:
 	for state in ["normal", "hover", "pressed", "disabled"]:
-		var box := StyleBoxFlat.new()
 		# Matches game_theme.tres's own hover/pressed shading so these tiles
 		# give the same press feedback as every other button in the game.
 		var state_bg := bg
@@ -29,19 +29,7 @@ func _style(bg: Color, border: Color, font_color: Color) -> void:
 			state_bg = bg.lightened(0.12)
 		elif state == "pressed":
 			state_bg = bg.darkened(0.15)
-		box.bg_color = state_bg
-		# Matches the global theme's button radius (game_theme.tres) --
-		# these tiles used to be 10px, visibly less rounded than every
-		# other button in the game.
-		box.corner_radius_top_left = 16
-		box.corner_radius_top_right = 16
-		box.corner_radius_bottom_left = 16
-		box.corner_radius_bottom_right = 16
-		box.border_width_bottom = 4
-		box.border_color = border
+		var box := ButtonStyle.build_state(state, state_bg, border)
 		box.content_margin_bottom = 16
 		add_theme_stylebox_override(state, box)
-	add_theme_color_override("font_color", font_color)
-	add_theme_color_override("font_disabled_color", font_color)
-	add_theme_color_override("font_hover_color", font_color)
-	add_theme_color_override("font_pressed_color", font_color)
+	ButtonStyle.apply_font_color(self, font_color)

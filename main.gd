@@ -1,6 +1,6 @@
 extends Node2D
 
-const MazeGenerator := preload("res://maze_generator.gd")
+const SlideBFS := preload("res://slide_bfs.gd")
 
 const FLOOR_SOURCE_ID := 2
 const FLOOR_ATLAS_COORDS := Vector2i(1, 0)
@@ -23,13 +23,11 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var menu_button: Button = $HUD/MenuButton
 @onready var restart_button: Button = $HUD/RestartButton
 
-var rng := RandomNumberGenerator.new()
 var _test_level := 1
 var current_level := 1
 var _current_level_entry: Dictionary = {}
 
 func _ready() -> void:
-	rng.randomize()
 	menu_button.pressed.connect(go_to_level_select)
 	restart_button.pressed.connect(retry_level)
 	_build_board()
@@ -53,33 +51,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	match event.keycode:
-		KEY_M:
-			generate_procedural_maze()
-		KEY_1:
-			generate_procedural_maze("easy")
-		KEY_2:
-			generate_procedural_maze("medium")
-		KEY_3:
-			generate_procedural_maze("hard")
 		KEY_L:
 			load_level(_test_level)
 			_test_level = _test_level % GameState.get_levels().size() + 1
-
-func generate_procedural_maze(target_difficulty: String = "") -> void:
-	# Border ring stays fixed; only the interior is regenerated.
-	var bounds := Rect2i(Vector2i.ZERO, level_size).grow(-1)
-	var start := bounds.position
-	var maze := MazeGenerator.generate(bounds, start, rng, target_difficulty)
-	var bfs: Dictionary = maze.bfs
-	var goal: Vector2i = bfs.farthest
-	var difficulty: int = bfs.distances[goal]
-
-	_current_level_entry = {} # no stored par for a live procedural maze
-	_start_level(bounds, maze.walls, start)
-
-	print("Procedural maze: goal %s, %d slides to reach it (%s) [seed %d]" % [
-		goal, difficulty, MazeGenerator.difficulty_label(difficulty), rng.seed
-	])
 
 func load_level(level_number: int) -> void:
 	var entry := GameState.get_level_entry(level_number)
@@ -119,7 +93,7 @@ func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
 	player.level_complete = false
 	win_popup.hide_popup()
 
-	var touched: Dictionary = MazeGenerator.slide_bfs(walls, bounds, start).touched
+	var touched: Dictionary = SlideBFS.slide_bfs(walls, bounds, start).touched
 	player.total_paintable = touched.size()
 
 	hud_moves_label.text = "Moves: 0"

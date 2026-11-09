@@ -11,8 +11,6 @@ Open the project in Godot 4.7 and run `game.tscn` (set as the main scene).
 
 | Key | Action |
 |-----|--------|
-| `M` | Regenerate a random procedural maze (any difficulty) |
-| `1` / `2` / `3` | Regenerate targeting easy / medium / hard difficulty |
 | `L` | Load the next stored level from `levels/levels.json`, wrapping around |
 
 ## Pregenerated levels
