@@ -65,7 +65,10 @@ func _rebuild_note_streams() -> void:
 		_note_streams[i] = _build_note_stream(freq)
 
 func _draw() -> void:
-	draw_circle(Vector2.ZERO, RADIUS, color, true)
+	draw_circle(Vector2.ZERO, RADIUS, color, true, -1.0, true)
+	var border_color := color.darkened(0.35)
+	border_color.a = 0.35
+	draw_circle(Vector2.ZERO, RADIUS - 1.0, border_color, false, 2.0, true)
 
 func _process(_delta: float) -> void:
 	if moving:
