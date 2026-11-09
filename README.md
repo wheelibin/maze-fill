@@ -1,4 +1,4 @@
-# Maze Fill
+# Paint Flow
 
 A Godot 4.7 slide-puzzle game: the player slides until hitting a wall
 (Ricochet Robots style), painting every tile it crosses.
