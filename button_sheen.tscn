@@ -1,13 +1,9 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://button_sheen.png" id="1_sheen"]
+[ext_resource type="Script" path="res://button_sheen.gd" id="1_sheen"]
 
-[node name="Sheen" type="NinePatchRect"]
+[node name="Sheen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-texture = ExtResource("1_sheen")
-patch_margin_left = 16
-patch_margin_top = 20
-patch_margin_right = 16
-patch_margin_bottom = 20
+script = ExtResource("1_sheen")
