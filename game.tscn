@@ -101,7 +101,7 @@ script = ExtResource("3_feb5d")
 [node name="Margin" type="MarginContainer" parent="HUD" unique_id=159644928]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 327.0
+offset_right = 380.0
 offset_bottom = 56.0
 
 [node name="Panel" type="Panel" parent="HUD/Margin" unique_id=1379288360]
