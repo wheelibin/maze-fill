@@ -8,3 +8,4 @@
 # Generator run output, not source
 generator/*.txt
 generator/*.log
+generator/maze-fill-generator

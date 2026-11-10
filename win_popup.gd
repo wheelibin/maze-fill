@@ -26,7 +26,15 @@ func _ready() -> void:
 	_recolor_button(next_button, UIColors.TEAL, UIColors.TEAL_HOVER, UIColors.TEAL_DARK, UIColors.NAVY)
 	_make_outline_button(menu_button)
 	_recolor_button(hint_button, UIColors.GOLD, UIColors.GOLD.darkened(0.12), UIColors.GOLD.darkened(0.25), UIColors.NAVY)
-	_make_text_link(solution_button, UIColors.GOLD.darkened(0.25))
+	# Solution stays a plain text link -- no fill/border/shadow -- so it
+	# reads as "last resort" next to Hint's filled, more inviting button.
+	var solution_color := UIColors.GOLD.darkened(0.25)
+	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
+		solution_button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	solution_button.add_theme_font_size_override("font_size", 18)
+	solution_button.add_theme_color_override("font_color", solution_color)
+	solution_button.add_theme_color_override("font_hover_color", solution_color.darkened(0.2))
+	solution_button.add_theme_color_override("font_pressed_color", solution_color.darkened(0.35))
 
 ## Secondary action: same rounded shape as the theme's primary button, just
 ## a different fill color -- keeps the family look without a second theme.
@@ -61,19 +69,6 @@ func _make_outline_button(button: Button) -> void:
 	button.add_theme_color_override("font_color", font_color)
 	button.add_theme_color_override("font_hover_color", font_color)
 	button.add_theme_color_override("font_pressed_color", font_color)
-
-## Quaternary action: no fill/border/shadow at all, just small colored text
-## -- for Hint/Solution, which should read as "psst, need help?" rather
-## than compete visually with Next/Retry/Menu. Each gets its own color so
-## the two read as distinct actions, not a single blob of link text.
-func _make_text_link(button: Button, color: Color) -> void:
-	var empty := StyleBoxEmpty.new()
-	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
-		button.add_theme_stylebox_override(state, empty)
-	button.add_theme_font_size_override("font_size", 18)
-	button.add_theme_color_override("font_color", color)
-	button.add_theme_color_override("font_hover_color", color.darkened(0.2))
-	button.add_theme_color_override("font_pressed_color", color.darkened(0.35))
 
 func show_result(moves: int, par: int = -1, stars: int = -1) -> void:
 	title_label.text = "LEVEL COMPLETE!"
