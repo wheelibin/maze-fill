@@ -18,8 +18,10 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var player = $Board/Player
 @onready var camera: Camera2D = $Board/Camera2D
 @onready var win_popup = $WinPopup/Panel
-@onready var hud_moves_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/MovesLabel
-@onready var hud_par_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/ParLabel
+@onready var hud_panel: Panel = $HUD/Margin/Panel
+@onready var hud_level_label: Label = $HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer/LevelLabel
+@onready var hud_moves_label: Label = $HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer/MovesLabel
+@onready var hud_par_label: Label = $HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer/ParLabel
 @onready var menu_button: Button = $HUD/MenuButton
 @onready var restart_button: Button = $HUD/RestartButton
 
@@ -30,6 +32,7 @@ var _current_level_entry: Dictionary = {}
 func _ready() -> void:
 	menu_button.pressed.connect(go_to_level_select)
 	restart_button.pressed.connect(retry_level)
+	hud_panel.custom_minimum_size.y = restart_button.get_combined_minimum_size().y
 	_build_board()
 	camera.fit_board()
 	load_level(GameState.selected_level)
@@ -96,6 +99,7 @@ func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
 	var touched: Dictionary = SlideBFS.slide_bfs(walls, bounds, start).touched
 	player.total_paintable = touched.size()
 
+	hud_level_label.text = "Level %d" % GameState.local_level(current_level)
 	hud_moves_label.text = "Moves: 0"
 	var min_moves := int(_current_level_entry.get("min_moves", -1))
 	hud_par_label.visible = min_moves > 0
