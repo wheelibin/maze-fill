@@ -104,7 +104,7 @@ func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
 	var min_moves := int(_current_level_entry.get("min_moves", -1))
 	hud_par_label.visible = min_moves > 0
 	if min_moves > 0:
-		hud_par_label.text = "Par: %d" % min_moves
+		hud_par_label.text = "Min: %d" % min_moves
 
 	player.paint_cell(start)
 

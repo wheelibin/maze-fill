@@ -47,6 +47,7 @@ type StateKey struct {
 
 type SolveResult struct {
 	Moves          int
+	Path           []int8
 	StatesExplored int
 }
 
@@ -122,6 +123,13 @@ type searchNode struct {
 	lanes     Lanes
 	g         int
 	remaining int
+	parentKey StateKey
+	dir       int8
+}
+
+type cameFromEntry struct {
+	parent StateKey
+	dir    int8
 }
 
 // MinMovesToCover returns SolveResult{-1, statesExplored} if `budget`
@@ -147,12 +155,21 @@ func MinMovesToCover(walls map[Point]bool, bounds Bounds, start Point, touched m
 	startRemaining := len(tiles) - 1
 
 	closed := map[StateKey]bool{}
+	// Predecessor of each closed state, recorded only at close time (see
+	// below) -- that's the only point the algorithm's A* ordering
+	// guarantees the recorded parent is the optimal one, despite the
+	// queue allowing multiple, differently-g'd pushes for the same key.
+	cameFrom := map[StateKey]cameFromEntry{}
 
 	// Priority queue bucketed by f-value, indexed directly (f is a
 	// small bounded int) -- grown on demand if a push exceeds capacity.
 	buckets := make([][]searchNode, len(tiles)+1)
 	minF := heuristic(startRemaining, maxRun)
-	buckets[minF] = append(buckets[minF], searchNode{startIndex, startLanes, 0, startRemaining})
+	startKey := StateKey{startIndex, startLanes}
+	buckets[minF] = append(buckets[minF], searchNode{
+		posIndex: startIndex, lanes: startLanes, g: 0, remaining: startRemaining,
+		parentKey: startKey, dir: -1,
+	})
 
 	statesExplored := 0
 	deadline := time.Now().Add(budget)
@@ -162,10 +179,10 @@ func MinMovesToCover(walls map[Point]bool, bounds Bounds, start Point, touched m
 			minF++
 		}
 		if minF >= len(buckets) {
-			return SolveResult{-1, statesExplored}
+			return SolveResult{Moves: -1, StatesExplored: statesExplored}
 		}
 		if time.Now().After(deadline) {
-			return SolveResult{-1, statesExplored}
+			return SolveResult{Moves: -1, StatesExplored: statesExplored}
 		}
 
 		bucket := buckets[minF]
@@ -178,12 +195,21 @@ func MinMovesToCover(walls map[Point]bool, bounds Bounds, start Point, touched m
 		}
 		closed[key] = true
 		statesExplored++
-
-		if cur.remaining == 0 {
-			return SolveResult{cur.g, statesExplored}
+		if cur.dir >= 0 {
+			cameFrom[key] = cameFromEntry{parent: cur.parentKey, dir: cur.dir}
 		}
 
-		for _, tr := range table[cur.posIndex] {
+		if cur.remaining == 0 {
+			path := make([]int8, cur.g)
+			for i, k := cur.g-1, key; k != startKey; i-- {
+				entry := cameFrom[k]
+				path[i] = entry.dir
+				k = entry.parent
+			}
+			return SolveResult{Moves: cur.g, Path: path, StatesExplored: statesExplored}
+		}
+
+		for di, tr := range table[cur.posIndex] {
 			if !tr.valid {
 				continue
 			}
@@ -209,7 +235,10 @@ func MinMovesToCover(walls map[Point]bool, bounds Bounds, start Point, touched m
 				copy(grown, buckets)
 				buckets = grown
 			}
-			buckets[newF] = append(buckets[newF], searchNode{tr.destIndex, newLanes, newG, newRemaining})
+			buckets[newF] = append(buckets[newF], searchNode{
+				posIndex: tr.destIndex, lanes: newLanes, g: newG, remaining: newRemaining,
+				parentKey: key, dir: int8(di),
+			})
 			if newF < minF {
 				minF = newF
 			}

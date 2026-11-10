@@ -70,6 +70,7 @@ type levelEntry struct {
 	DifficultyScore float64  `json:"difficulty_score"`
 	DifficultyLabel string   `json:"difficulty_label"`
 	MinMoves        int      `json:"min_moves"`
+	Path            [][2]int `json:"path"`
 }
 
 func scoreCandidate(bfs BFSResult) float64 {
@@ -319,6 +320,12 @@ func main() {
 				return wallsArr[a][0] < wallsArr[b][0]
 			})
 
+			pathArr := make([][2]int, len(solved[i].Path))
+			for j, dirIdx := range solved[i].Path {
+				d := DIRS[dirIdx]
+				pathArr[j] = [2]int{d.X, d.Y}
+			}
+
 			levels = append(levels, levelEntry{
 				Size:            [2]int{size.X, size.Y},
 				Start:           [2]int{start.X, start.Y},
@@ -327,6 +334,7 @@ func main() {
 				DifficultyScore: chosen[i].score,
 				DifficultyLabel: chosenLabel[i],
 				MinMoves:        solved[i].Moves,
+				Path:            pathArr,
 			})
 		}
 
@@ -351,6 +359,32 @@ func main() {
 		if float64(bfs.Distances[goal]) != entry.DifficultyScore {
 			panic(fmt.Sprintf("self-check failed for level with goal %v", goal))
 		}
+
+		if len(entry.Path) != entry.MinMoves {
+			panic(fmt.Sprintf("self-check failed: path length %d != min_moves %d (start %v)", len(entry.Path), entry.MinMoves, s))
+		}
+		painted := map[Point]bool{s: true}
+		pos := s
+		for _, step := range entry.Path {
+			dir := Point{step[0], step[1]}
+			next := slide(walls, b, pos, dir)
+			if next == pos {
+				panic(fmt.Sprintf("self-check failed: path step %v from %v is a no-op slide (start %v)", dir, pos, s))
+			}
+			for p := pos; p != next; {
+				p = p.Add(dir)
+				painted[p] = true
+			}
+			pos = next
+		}
+		if len(painted) != len(bfs.Touched) {
+			panic(fmt.Sprintf("self-check failed: path paints %d tiles, touched set has %d (start %v)", len(painted), len(bfs.Touched), s))
+		}
+		for p := range bfs.Touched {
+			if !painted[p] {
+				panic(fmt.Sprintf("self-check failed: path never paints touched tile %v (start %v)", p, s))
+			}
+		}
 	}
 
 	out, err := filepath.Abs(outputPath)
@@ -360,7 +394,7 @@ func main() {
 	if err := os.MkdirAll(filepath.Dir(out), 0755); err != nil {
 		panic(err)
 	}
-	data, err := json.MarshalIndent(levels, "", "\t")
+	data, err := json.Marshal(levels)
 	if err != nil {
 		panic(err)
 	}
