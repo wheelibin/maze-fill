@@ -51,7 +51,7 @@ swap, so it's where cross-screen state lives:
   default). `GameState.tune_for_level()` cycles them the same way
   `scale_for_level()` cycles `SCALE_SETS`.
 - Save data (`user://save.json` — on desktop this is
-  `~/Library/Application Support/Godot/app_userdata/Paint Flow/save.json`,
+  `~/Library/Application Support/Godot/app_userdata/Flow Paint/save.json`,
   delete it to reset all progress) and the star-rating formula
   (`compute_stars`).
 

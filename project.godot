@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Paint Flow"
+config/name="Flow Paint"
 run/main_scene="res://size_select.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.953, 0.949, 0.988, 1)
