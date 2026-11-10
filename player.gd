@@ -157,6 +157,8 @@ func squash(direction: Vector2i) -> void:
 ## Plays a precomputed blip, picking a note from _scale_semitones each hit
 ## so it always sounds musical without ever repeating a predictable pattern.
 func play_wall_hit_note() -> void:
+	if not GameState.get_sound_effects_enabled():
+		return
 	wall_hit_sound.stream = _note_streams[_sequential_scale_step()]
 	wall_hit_sound.play()
 

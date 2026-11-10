@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://cgwy7fcvf5kca" path="res://win_popup.gd" id="7_winpopup"]
 [ext_resource type="PackedScene" path="res://star_rating.tscn" id="8_starrating"]
 [ext_resource type="PackedScene" path="res://button_sheen.tscn" id="9_sheen"]
-[ext_resource type="Script" path="res://background_pad.gd" id="10_pad"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_blur"]
 shader = ExtResource("5_shadow_blur")
@@ -28,9 +27,6 @@ fill_to = Vector2(1, 0.5)
 [node name="Main" type="Node2D" unique_id=919874870]
 script = ExtResource("4_main")
 level_size = Vector2i(14, 6)
-
-[node name="BackgroundPad" type="Node" parent="."]
-script = ExtResource("10_pad")
 
 [node name="Board" type="Node2D" parent="." unique_id=1087012498]
 

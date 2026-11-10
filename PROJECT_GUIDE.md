@@ -1,7 +1,7 @@
 # Navigating this project in the Godot editor
 
 This project used to be easy to browse because everything lived under one
-scene tree. It no longer does: the game flows through **three separate
+scene tree. It no longer does: the game flows through **four separate
 scenes**, swapped in and out at runtime with `get_tree().change_scene_to_file()`
 rather than nested as children of a single root. That means the editor's
 default Scene tab only ever shows you _one screen at a time_, and opening
@@ -11,6 +11,8 @@ default Scene tab only ever shows you _one screen at a time_, and opening
 
 ```
 size_select.tscn  --(pick a board size)-->  level_select.tscn  --(pick a level)-->  game.tscn
+      |
+      --(Options button)-->  options.tscn  --(Back)-->  size_select.tscn
 ```
 
 - `project.godot`'s `run/main_scene` is `size_select.tscn` — that's what
@@ -60,7 +62,8 @@ swap, so it's where cross-screen state lives:
 | The shared color _names_ used by those scripts (navy, teal, gold, etc.)  | `ui_colors.gd` — a `RefCounted` of `const Color` tokens. This is separate from `game_theme.tres` on purpose: `.tscn` files can only reference theme/resource colors, not GDScript constants, so anything styled from a _script_ pulls from here instead of re-declaring its own copy. |
 | Button text itself, static labels, spacing between UI elements           | Directly in the relevant `.tscn` file (`size_select.tscn`, `level_select.tscn`, `game.tscn`) — these are plain data, no script needed.                                                                                                                                                |
 | Paint flood-fill colors per level                                        | `GameState.PAINT_COLORS` in `game_state.gd`.                                                                                                                                                                                                                                          |
-| Wall-hit note scale/mood per level                                       | `GameState.SCALE_SETS` in `game_state.gd`.                                                                                                                                                                                                                                            |
+| Wall-hit note scale/mood per level | `GameState.SCALE_SETS` in `game_state.gd`. |
+| The sound effects on/off setting | `options.tscn`/`options.gd` is the UI; `GameState.get_sound_effects_enabled()`/`set_sound_effects_enabled()` persist it (default on) in the save file under `sound_effects_enabled`. `player.gd`'s `play_wall_hit_note()` checks it. |
 | Camera fit/zoom behavior (how much a board is scaled to fill the screen) | `camera_2d.gd` — `margin` (edge padding) and `max_zoom_desktop` (cap on desktop so small boards don't balloon on huge monitors; skipped on touch-primary devices, detected via `_is_touch_primary()`).                                                                                |
 | Star-rating thresholds                                                   | `GameState.compute_stars()` in `game_state.gd` (currently 3★ at ≤115% of par, 2★ at ≤150%, 1★ for finishing).                                                                                                                                                                         |
 | Player feel: slide speed, squash animation, trail particles              | `player.gd` (`slide_speed`, `SQUASH_STRENGTH`/`SQUASH_SETTLE_DURATION`, `$TrailParticles`).                                                                                                                                                                                           |

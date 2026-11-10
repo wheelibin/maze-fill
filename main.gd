@@ -17,7 +17,6 @@ const WALL_ATLAS_COORDS := Vector2i(0, 0)
 @onready var painted_layer: TileMapLayer = $Board/Painted
 @onready var player = $Board/Player
 @onready var camera: Camera2D = $Board/Camera2D
-@onready var background_pad = $BackgroundPad
 @onready var win_popup = $WinPopup/Panel
 @onready var hud_moves_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/MovesLabel
 @onready var hud_par_label: Label = $HUD/Margin/Panel/MarginContainer/HBoxContainer/ParLabel
@@ -86,8 +85,6 @@ func _start_level(bounds: Rect2i, walls: Dictionary, start: Vector2i) -> void:
 	painted_layer.clear()
 	painted_layer.modulate = GameState.paint_color_for_level(current_level)
 	player.set_level_scale(GameState.scale_for_level(current_level))
-	background_pad.set_level_scale(GameState.scale_for_level(current_level))
-	background_pad.resume()
 
 	player.grid_pos = start
 	player.position = floor_layer.map_to_local(start)
@@ -111,7 +108,6 @@ func update_move_count(moves: int) -> void:
 	hud_moves_label.text = "Moves: %d" % moves
 
 func show_win_popup(moves: int) -> void:
-	background_pad.stop()
 	var par := int(_current_level_entry.get("min_moves", -1))
 	var stars := -1
 	if not _current_level_entry.is_empty():

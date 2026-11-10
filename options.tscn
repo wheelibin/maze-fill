@@ -41,13 +41,13 @@ text = "Options"
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
-[node name="MusicButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="SfxButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "MUSIC: OFF"
+text = "SOUND EFFECTS: ON"
 
-[node name="Sheen" parent="CenterContainer/VBoxContainer/MusicButton" instance=ExtResource("3_sheen")]
+[node name="Sheen" parent="CenterContainer/VBoxContainer/SfxButton" instance=ExtResource("3_sheen")]
 
 [node name="Spacer2" type="Control" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 8)
