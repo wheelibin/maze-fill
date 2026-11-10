@@ -8,6 +8,15 @@
 [ext_resource type="Script" uid="uid://cgwy7fcvf5kca" path="res://win_popup.gd" id="7_winpopup"]
 [ext_resource type="PackedScene" path="res://star_rating.tscn" id="8_starrating"]
 [ext_resource type="PackedScene" path="res://button_sheen.tscn" id="9_sheen"]
+[ext_resource type="Script" path="res://ghost.gd" id="10_ghost"]
+[ext_resource type="FontFile" uid="uid://dgedlr2a0gbgl" path="res://fonts/Fredoka.ttf" id="11_fredoka"]
+
+[sub_resource type="FontVariation" id="FontVariation_bold"]
+base_font = ExtResource("11_fredoka")
+variation_opentype = {
+"wght": 900.0
+}
+variation_embolden = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
 bg_color = Color(1, 1, 1, 1)
@@ -46,6 +55,10 @@ tile_set = ExtResource("1_e2o6t")
 [node name="Painted" type="TileMapLayer" parent="Board" unique_id=325526839]
 tile_set = ExtResource("1_e2o6t")
 
+[node name="GhostTrail" type="TileMapLayer" parent="Board" unique_id=500000001]
+modulate = Color(1, 1, 1, 0.5)
+tile_set = ExtResource("1_e2o6t")
+
 [node name="WallShadowGroup" type="CanvasGroup" parent="Board" unique_id=2131743664]
 material = SubResource("ShaderMaterial_shadow_blur")
 
@@ -75,6 +88,10 @@ initial_velocity_max = 20.0
 scale_amount_min = 0.8
 scale_amount_max = 1.4
 color = Color(1, 0.7, 0.1, 1)
+
+[node name="Ghost" type="Node2D" parent="Board" unique_id=500000002]
+visible = false
+script = ExtResource("10_ghost")
 
 [node name="Camera2D" type="Camera2D" parent="Board" unique_id=84097757]
 script = ExtResource("3_feb5d")
@@ -106,23 +123,41 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="LevelLabel" type="Label" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=1183461255]
+[node name="LevelLabel" type="RichTextLabel" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=1183461255]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.235, 0.247, 0.31, 1)
-theme_override_font_sizes/font_size = 20
-text = "Level 99"
+theme_override_colors/default_color = Color(0.235, 0.247, 0.31, 1)
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
+bbcode_enabled = true
+text = "LEVEL [b]99[/b]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
-[node name="MovesLabel" type="Label" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=1183461254]
+[node name="MovesLabel" type="RichTextLabel" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=1183461254]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.235, 0.247, 0.31, 1)
-theme_override_font_sizes/font_size = 20
-text = "Moves: 99"
+theme_override_colors/default_color = Color(0.235, 0.247, 0.31, 1)
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
+bbcode_enabled = true
+text = "MOVES: [b]99[/b]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
-[node name="ParLabel" type="Label" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=2121464634]
+[node name="ParLabel" type="RichTextLabel" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=2121464634]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.647, 0, 1)
-theme_override_font_sizes/font_size = 20
-text = "Min: 99"
+theme_override_colors/default_color = Color(1, 0.647, 0, 1)
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
+bbcode_enabled = true
+text = "MIN: [b]99[/b]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="RestartButton" type="Button" parent="HUD" unique_id=1747789810]
 anchors_preset = 1
@@ -191,18 +226,24 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.235, 0.247, 0.31, 1)
 theme_override_font_sizes/font_size = 30
-text = "Level Complete!"
+text = "LEVEL COMPLETE!"
 horizontal_alignment = 1
 
 [node name="StarsLabel" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=346820241 instance=ExtResource("8_starrating")]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 
-[node name="MovesLabel" type="Label" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=191273140]
+[node name="MovesLabel" type="RichTextLabel" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=191273140]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.47, 0.54, 1)
-theme_override_font_sizes/font_size = 18
-horizontal_alignment = 1
+theme_override_colors/default_color = Color(0.45, 0.47, 0.54, 1)
+theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/bold_font_size = 18
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
+bbcode_enabled = true
+text = "[center]MOVES: [b]99[/b][/center]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="NextButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=753218675]
 layout_mode = 2
@@ -230,3 +271,20 @@ text = "BACK TO MENU"
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
+
+[node name="HintSpacer" type="Control" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=500000008]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HintRow" type="HBoxContainer" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=500000007]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 24
+
+[node name="HintButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer/HintRow" unique_id=500000003]
+layout_mode = 2
+text = "HINT"
+
+[node name="SolutionButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer/HintRow" unique_id=500000005]
+layout_mode = 2
+text = "SHOW SOLUTION"

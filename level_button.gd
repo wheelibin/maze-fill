@@ -15,7 +15,7 @@ func configure(local: int, unlocked: bool, completed: bool, stars: int, best_mov
 		_style(UIColors.DISABLED_BG, UIColors.DISABLED_BG, UIColors.DISABLED_TEXT)
 	elif completed:
 		stars_label.stars = stars
-		tooltip_text = "Best: %d moves" % best_moves
+		tooltip_text = "BEST: %d MOVES" % best_moves
 		_style(UIColors.TEAL, UIColors.TEAL_DARK, UIColors.NAVY)
 	else:
 		_style(Color.WHITE, UIColors.NAVY, UIColors.NAVY)

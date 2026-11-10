@@ -1,7 +1,7 @@
 extends Control
 
 const LevelButtonScene := preload("res://level_button.tscn")
-const TIER_LABELS := ["Small (14×6)", "Medium (16×8)", "Large (18×10)", "Huge (20×12)"]
+const TIER_LABELS := ["SMALL (14×6)", "MEDIUM (16×8)", "LARGE (18×10)", "HUGE (20×12)"]
 
 @onready var grid: GridContainer = $VBoxContainer/ScrollContainer/CenterContainer/LevelGrid
 @onready var header: Label = $VBoxContainer/TopBar/HeaderLabel
