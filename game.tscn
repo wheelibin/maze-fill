@@ -8,25 +8,8 @@
 [ext_resource type="Script" uid="uid://cgwy7fcvf5kca" path="res://win_popup.gd" id="7_winpopup"]
 [ext_resource type="PackedScene" path="res://star_rating.tscn" id="8_starrating"]
 [ext_resource type="PackedScene" path="res://button_sheen.tscn" id="9_sheen"]
-[ext_resource type="Script" path="res://ghost.gd" id="10_ghost"]
+[ext_resource type="Script" uid="uid://xtpi5d5ntlwd" path="res://ghost.gd" id="10_ghost"]
 [ext_resource type="FontFile" uid="uid://dgedlr2a0gbgl" path="res://fonts/Fredoka.ttf" id="11_fredoka"]
-
-[sub_resource type="FontVariation" id="FontVariation_bold"]
-base_font = ExtResource("11_fredoka")
-variation_opentype = {
-"wght": 900.0
-}
-variation_embolden = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
-bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-shadow_color = Color(0.235, 0.247, 0.31, 0.3)
-shadow_size = 6
-shadow_offset = Vector2(0, 4)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow_blur"]
 shader = ExtResource("5_shadow_blur")
@@ -42,6 +25,23 @@ height = 16
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0.235, 0.247, 0.31, 0.3)
+shadow_size = 6
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="FontVariation" id="FontVariation_bold"]
+base_font = ExtResource("11_fredoka")
+variation_opentype = {
+"wght": 900.0
+}
+variation_embolden = 1.0
 
 [node name="Main" type="Node2D" unique_id=919874870]
 script = ExtResource("4_main")
@@ -126,9 +126,9 @@ theme_override_constants/separation = 20
 [node name="LevelLabel" type="RichTextLabel" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=1183461255]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.235, 0.247, 0.31, 1)
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 theme_override_font_sizes/normal_font_size = 20
 theme_override_font_sizes/bold_font_size = 20
-theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 bbcode_enabled = true
 text = "LEVEL [b]99[/b]"
 fit_content = true
@@ -138,9 +138,9 @@ autowrap_mode = 0
 [node name="MovesLabel" type="RichTextLabel" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=1183461254]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.235, 0.247, 0.31, 1)
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 theme_override_font_sizes/normal_font_size = 20
 theme_override_font_sizes/bold_font_size = 20
-theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 bbcode_enabled = true
 text = "MOVES: [b]99[/b]"
 fit_content = true
@@ -150,9 +150,9 @@ autowrap_mode = 0
 [node name="ParLabel" type="RichTextLabel" parent="HUD/Margin/Panel/MarginContainer/CenterContainer/HBoxContainer" unique_id=2121464634]
 layout_mode = 2
 theme_override_colors/default_color = Color(1, 0.647, 0, 1)
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 theme_override_font_sizes/normal_font_size = 20
 theme_override_font_sizes/bold_font_size = 20
-theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 bbcode_enabled = true
 text = "MIN: [b]99[/b]"
 fit_content = true
@@ -236,9 +236,9 @@ layout_mode = 2
 [node name="MovesLabel" type="RichTextLabel" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=191273140]
 layout_mode = 2
 theme_override_colors/default_color = Color(0.45, 0.47, 0.54, 1)
+theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 theme_override_font_sizes/normal_font_size = 18
 theme_override_font_sizes/bold_font_size = 18
-theme_override_fonts/bold_font = SubResource("FontVariation_bold")
 bbcode_enabled = true
 text = "[center]MOVES: [b]99[/b][/center]"
 fit_content = true
@@ -278,8 +278,8 @@ size_flags_vertical = 3
 
 [node name="HintRow" type="HBoxContainer" parent="WinPopup/Panel/MarginContainer/VBoxContainer" unique_id=500000007]
 layout_mode = 2
-alignment = 1
 theme_override_constants/separation = 24
+alignment = 1
 
 [node name="HintButton" type="Button" parent="WinPopup/Panel/MarginContainer/VBoxContainer/HintRow" unique_id=500000003]
 layout_mode = 2

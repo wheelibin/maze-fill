@@ -12,7 +12,7 @@ extends RefCounted
 ## a known characteristic of the system, not a bug -- don't expect
 ## metronomic accuracy out of it.
 const TUNE_SETS: Array[Array] = [
-	# Ode to Joy
+	# 1. Ode to Joy
 	[
 	  "E4", "E4", "F4", "G4", "G4", "F4", "E4", "D4",
 	  "C4", "C4", "D4", "E4", "E4", "D4", "D4",
@@ -26,28 +26,19 @@ const TUNE_SETS: Array[Array] = [
 	  "E4", "E4", "F4", "G4", "G4", "F4", "E4", "D4",
 	  "C4", "C4", "D4", "E4", "D4", "C4", "C4"
 	],
-	# Can-Can
-	# [
-	#   "G4",
-	#   "A4", "C5", "B4", "A4",
-	#   "D5", "D5",
-	#   "D5", "E5", "B4", "C5",
-	#   "A4", "A4",
-	#
-	#   "A4", "C5", "B4", "A4",
-	#   "G4", "G5", "F#5", "E5",
-	#   "D5", "C5", "B4", "A4",
-	#   "G4",
-	#   "A4", "C5", "B4", "A4",
-	#   "D5", "D5",
-	#   "D5", "E5", "B4", "C5",
-	#   "A4", "A4",
-	#   "A4", "C5", "B4", "A4",
-	#   "B4", "G4", "A4", "B4",
-	#
-	#   "G4", "B4"
-	# ],
-	# fur-elise
+	# 2. Can-Can
+	[
+	  "G3", "G3",
+	  "A3", "C4", "B3", "A3",
+	  "D4", "D4",
+	  "D4", "E4", "B3", "C4",
+	  "A3", "A3",
+
+	  "A3", "C4", "B3", "A3",
+	  "G3", "G4", "F#4", "E4",
+	  "D4", "C4", "B3", "A3"
+	],
+	# 3. fur-elise
 	[
 	  "E4", "D#4", "E4", "D#4", "E4",
 	  "B3", "D4", "C4", "A3",
@@ -58,7 +49,7 @@ const TUNE_SETS: Array[Array] = [
 	  "C3", "E3", "A3", "B3",
 	  "E3", "C4", "B3", "A3"
 	],
-	# the swan
+	# 4. the swan
 	[
 		"G4", "F#4", "B3", 
 		"E4", "D4", "G3", 
@@ -66,5 +57,37 @@ const TUNE_SETS: Array[Array] = [
 		"E3", "F#3", "G3",
 		"A3", "B3", "C4",
 		"D4", "E4", "F#4", "B4"
+	],
+	# 5. in the hall of the mountain king
+	[
+	  "B3", "C#4", "D4", "E4", "F#4",
+	  "D4", "F#4",
+	  "F4", "C#4", "F4",
+	  "E4", "C4", "E4",
+
+	  "B3", "C#4", "D4", "E4", "F#4",
+	  "D4", "F#4",
+	  "B4", "A4", "F#4", "D4", "F#4", "A4"
+	],
+	# 6. greensleeves
+	[
+	  "A3", "C4", "D4",
+	  "E4", "F4", "E4",
+	  "D4", "B3",
+	  "G3", "A3", "B3",
+
+	  "C4", "A3",
+	  "A3", "G#3", "A3",
+	  "B3", "G#3",
+	  "E3", "A3",
+
+	  "A3", "C4", "D4",
+	  "E4", "F4", "E4",
+	  "D4", "B3",
+	  "G3", "A3", "B3",
+
+	  "C4", "B3", "A3",
+	  "G#3", "F#3", "G#3",
+	  "A3"
 	]
 ]
