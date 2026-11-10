@@ -32,9 +32,19 @@ const NOTE_ATTACK := 0.05 # fraction of NOTE_DURATION
 const NOTE_RELEASE := 0.4 # fraction of NOTE_DURATION
 const ROOT_FREQ := 220.0
 
+const NotePitch := preload("res://note_pitch.gd")
+const TuneSets := preload("res://tune_sets.gd")
+
+## Experimental: step sequentially through a preset melody (tune_sets.gd)
+## instead of bouncing through a per-level pentatonic scale. Toggle off in
+## the Inspector to compare against the original scale-walk below.
+@export var use_tune_mode: bool = true
+
 var _scale_semitones: Array = GameState.SCALE_SETS[0]
 var _scale_step := 0
 var _scale_direction := 1
+var _tune_notes: Array = TuneSets.TUNE_SETS[0]
+var _tune_step := 0
 var _note_streams: Array[AudioStreamWAV] = []
 
 func _ready() -> void:
@@ -42,6 +52,10 @@ func _ready() -> void:
 	paint_cell(grid_pos)
 	last_painted_cell = grid_pos
 	_rebuild_note_streams()
+	if OS.is_debug_build():
+		assert(is_equal_approx(snappedf(NotePitch.note_to_freq("A4"), 0.01), 440.0))
+		assert(is_equal_approx(snappedf(NotePitch.note_to_freq("C4"), 0.01), 261.63))
+		assert(is_equal_approx(snappedf(NotePitch.note_to_freq("F#3"), 0.01), 185.0))
 
 ## Called by main.gd when a level loads, so each level's wall-hit notes use
 ## a different rotation of the pentatonic scale (see GameState.SCALE_SETS).
@@ -51,6 +65,20 @@ func set_level_scale(semitones: Array) -> void:
 	_scale_direction = 1
 	_rebuild_note_streams()
 
+## Tune-mode counterpart to set_level_scale (see GameState.tune_for_level).
+func set_level_tune(note_names: Array) -> void:
+	_tune_notes = note_names
+	_tune_step = 0
+	_rebuild_note_streams()
+
+## Single entry point for main.gd -- it picks which mode is active, so
+## callers don't need to know about use_tune_mode.
+func set_level_notes(global_level: int) -> void:
+	if use_tune_mode:
+		set_level_tune(GameState.tune_for_level(global_level))
+	else:
+		set_level_scale(GameState.scale_for_level(global_level))
+
 # Precomputed once into finite AudioStreamWAVs, played via plain .play().
 # Previously used AudioStreamGenerator's manual ring buffer, but that
 # assumes continuous real-time consumption — on mobile, backgrounding the
@@ -59,9 +87,11 @@ func set_level_scale(semitones: Array) -> void:
 # the rest of the session. A finite, fully-managed stream has no such state
 # to desync.
 func _rebuild_note_streams() -> void:
-	_note_streams.resize(_scale_semitones.size())
-	for i in _scale_semitones.size():
-		var freq := ROOT_FREQ * pow(2.0, _scale_semitones[i] / 12.0)
+	var count := _tune_notes.size() if use_tune_mode else _scale_semitones.size()
+	_note_streams.resize(count)
+	for i in count:
+		var freq: float = NotePitch.note_to_freq(_tune_notes[i]) if use_tune_mode \
+			else ROOT_FREQ * pow(2.0, _scale_semitones[i] / 12.0)
 		_note_streams[i] = _build_note_stream(freq)
 
 func _draw() -> void:
@@ -154,12 +184,13 @@ func squash(direction: Vector2i) -> void:
 	_squash_tween.tween_property(self, "scale", Vector2.ONE, SQUASH_SETTLE_DURATION) \
 		.set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
-## Plays a precomputed blip, picking a note from _scale_semitones each hit
-## so it always sounds musical without ever repeating a predictable pattern.
+## Plays a precomputed blip: steps through the level's tune (or bounces
+## through its scale, in the old mode) one note per wall-hit.
 func play_wall_hit_note() -> void:
 	if not GameState.get_sound_effects_enabled():
 		return
-	wall_hit_sound.stream = _note_streams[_sequential_scale_step()]
+	var index := _tune_step_advance() if use_tune_mode else _sequential_scale_step()
+	wall_hit_sound.stream = _note_streams[index]
 	wall_hit_sound.play()
 
 ## shortcut: plain sine only, no filtered-square option — swap the
@@ -196,6 +227,13 @@ func _sequential_scale_step() -> int:
 	_scale_step += _scale_direction
 	if _scale_step >= _scale_semitones.size() - 1 or _scale_step <= 0:
 		_scale_direction *= -1
+	return step
+
+# walk forward through the tune, looping back to the start -- a melody has
+# a direction, unlike the scale's back-and-forth bounce above.
+func _tune_step_advance() -> int:
+	var step := _tune_step
+	_tune_step = (_tune_step + 1) % _tune_notes.size()
 	return step
 
 func paint_cell(cell: Vector2i) -> void:

@@ -38,6 +38,11 @@ const SCALE_SETS: Array[Array] = [
 func scale_for_level(global_level: int) -> Array:
 	return SCALE_SETS[(global_level - 1) % SCALE_SETS.size()]
 
+const TuneSets := preload("res://tune_sets.gd")
+
+func tune_for_level(global_level: int) -> Array:
+	return TuneSets.TUNE_SETS[(global_level - 1) % TuneSets.TUNE_SETS.size()]
+
 var _levels_data: Array = []
 var _levels_loaded := false
 var _save_data: Dictionary = {}

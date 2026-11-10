@@ -44,8 +44,12 @@ swap, so it's where cross-screen state lives:
 - `selected_size_index`, `selected_level` — what the player picked, read by
   the next screen.
 - `PAINT_COLORS` — the 8 flood-fill colors, cycled per level.
-- `SCALE_SETS` — the 5 pentatonic note sets used for the wall-hit sound,
-  cycled per level.
+- `SCALE_SETS` — the 5 pentatonic note sets used for the wall-hit sound in
+  the original scale-walk mode, cycled per level.
+- `TUNE_SETS` (in `tune_sets.gd`, not `game_state.gd`) — the preset melodies
+  played instead, when `player.gd`'s `use_tune_mode` export is on (the
+  default). `GameState.tune_for_level()` cycles them the same way
+  `scale_for_level()` cycles `SCALE_SETS`.
 - Save data (`user://save.json` — on desktop this is
   `~/Library/Application Support/Godot/app_userdata/Paint Flow/save.json`,
   delete it to reset all progress) and the star-rating formula
@@ -62,7 +66,7 @@ swap, so it's where cross-screen state lives:
 | The shared color _names_ used by those scripts (navy, teal, gold, etc.)  | `ui_colors.gd` — a `RefCounted` of `const Color` tokens. This is separate from `game_theme.tres` on purpose: `.tscn` files can only reference theme/resource colors, not GDScript constants, so anything styled from a _script_ pulls from here instead of re-declaring its own copy. |
 | Button text itself, static labels, spacing between UI elements           | Directly in the relevant `.tscn` file (`size_select.tscn`, `level_select.tscn`, `game.tscn`) — these are plain data, no script needed.                                                                                                                                                |
 | Paint flood-fill colors per level                                        | `GameState.PAINT_COLORS` in `game_state.gd`.                                                                                                                                                                                                                                          |
-| Wall-hit note scale/mood per level | `GameState.SCALE_SETS` in `game_state.gd`. |
+| Wall-hit note content per level | Default is tune mode: edit `TuneSets.TUNE_SETS` in `tune_sets.gd` (flat note-name lists like `"C4"`, `"F#3"`) to add/change melodies — `GameState.tune_for_level()` cycles them per level, `note_pitch.gd` converts the names to Hz. Toggle `Player`'s `use_tune_mode` export off in the Inspector to fall back to the old scale-walk (`GameState.SCALE_SETS` in `game_state.gd`). |
 | The sound effects on/off setting | `options.tscn`/`options.gd` is the UI; `GameState.get_sound_effects_enabled()`/`set_sound_effects_enabled()` persist it (default on) in the save file under `sound_effects_enabled`. `player.gd`'s `play_wall_hit_note()` checks it. |
 | Camera fit/zoom behavior (how much a board is scaled to fill the screen) | `camera_2d.gd` — `margin` (edge padding) and `max_zoom_desktop` (cap on desktop so small boards don't balloon on huge monitors; skipped on touch-primary devices, detected via `_is_touch_primary()`).                                                                                |
 | Star-rating thresholds                                                   | `GameState.compute_stars()` in `game_state.gd` (currently 3★ at ≤115% of par, 2★ at ≤150%, 1★ for finishing).                                                                                                                                                                         |
